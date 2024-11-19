@@ -1,0 +1,39 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@configs/*": ["src/error/*"],
+      "@constants/*": ["src/constants/*"],
+      "@error/*": ["src/error/*"],
+      "@functions/*": ["src/functions/*"],
+      "@libs/*": ["src/libs/*"],
+      "@models/*": ["src/models/*"],
+      "@repository/*": ["src/repository/*"],
+      "@services/*": ["src/services/*"],
+      "@type/*": ["src/types/*"]
+    },
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    // "allowSyntheticDefaultImports": true,
+    "lib": ["ESNext"],
+    "moduleResolution": "node",
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "removeComments": true,
+    "sourceMap": true,
+    "target": "ES2020",
+    "module": "ES2020",
+    "preserveConstEnums": true,
+    "resolveJsonModule": true,
+    "allowJs": true,
+    "rootDir": ".",
+    "outDir": "lib",
+    "esModuleInterop": true,
+    "skipLibCheck": true
+  },
+  "include": ["src/**/*.ts", "serverless.ts", "src/services/correction"],
+  "exclude": ["node_modules/**/*", ".serverless/**/*", ".webpack/**/*", "_warmup/**/*", ".vscode/**/*"],
+  "ts-node": {
+    "require": ["tsconfig-paths/register"]
+  }
+}
