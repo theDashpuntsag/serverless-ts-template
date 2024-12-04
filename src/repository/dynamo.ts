@@ -8,66 +8,67 @@ import type {
   QueryCommandOutput,
   UpdateCommandInput,
 } from '@aws-sdk/lib-dynamodb';
+import type {
+  CustomGetCommandInput,
+  CustomPutCommandInput,
+  CustomQueryCommandInput,
+  CustomQueryCommandOutput,
+  CustomUpdateItemInput,
+} from '@type/dynamo.types';
 
 import CustomError from '@configs/custom-error';
 import logger from '@libs/winston';
 
-export type CustomQueryCommandInput = {
-  tableName: string;
-  lastEvaluatedKey?: string;
-  keyConditionExpression: string;
-  expressionAttributeValues: Record<string, any>;
-  options?: {
-    indexName?: string;
-    filterExpression?: string;
-    projectionExpression?: string;
-    limit?: number;
-    scanIndexForward?: boolean;
-  };
-};
-
-export type CustomQueryCommandOutput<T> = {
-  lastEvaluatedKey: string;
-  items: T[];
-};
-
+// Initialize DynamoDB client
 const dynamoDb = new DynamoDBClient({ region: 'ap-southeast-1' });
 const docClient = DynamoDBDocumentClient.from(dynamoDb);
 
 /**
  * Retrieve a single record from a DynamoDB table by its key.
  *
- * @param tName - The name of the DynamoDB table.
- * @param key - The key name of the record to retrieve.
- * @param value - The value of the key for the record to retrieve.
+ * @param inputs - An object containing the following properties:
+ *  - tableName: The name of the DynamoDB table.
+ *  - key: The key name of the record to retrieve.
+ *  - value: The value of the key for the record to retrieve.
  * @returns A promise resolving to the retrieved record of type T or undefined if not found.
  */
-async function getRecordByKey<T>(tName: string, key: string, value: any): Promise<T | undefined> {
+export async function getRecordByKey<T>(inputs: CustomGetCommandInput): Promise<T | undefined> {
+  const { tableName, key, value } = inputs;
+
   try {
     const result: GetCommandOutput = await docClient.send(
       new GetCommand({
-        TableName: tName,
-        Key: { [key]: value }, // Dynamically use the key-value pair
+        TableName: tableName,
+        Key: { [key]: value },
       })
     );
-
     return result.Item ? (result.Item as T) : undefined;
-  } catch (error: unknown) {
-    logger.info(`Error on getSingleItemByKey: ${error instanceof Error ? error : JSON.stringify(error ?? {})}`);
-    throw error instanceof Error ? error : new CustomError('Unexpected error!');
+  } catch (error) {
+    logger.error(`Error retrieving record from table "${tableName}": ${error}`);
+    throw error instanceof Error ? error : new CustomError('Unexpected error while retrieving record.');
   }
 }
 
 /**
  * Query multiple records from a DynamoDB table based on a key condition.
  *
- * @param inputs - The query inputs, including table name, key condition, and optional parameters.
+ * @param inputs - An object containing the following properties:
+ *  - tableName: The name of the DynamoDB table.
+ *  - lastEvaluatedKey: A string representing the last evaluated key for pagination (optional).
+ *  - keyConditionExpression: A string defining the key condition for the query.
+ *  - expressionAttributeValues: A map of attribute values used in the key condition expression.
+ *  - options: Additional query options (optional), including:
+ *    - indexName: The name of the index to query.
+ *    - filterExpression: A filter expression to apply after the query.
+ *    - projectionExpression: A projection expression to return specific attributes.
+ *    - limit: The maximum number of items to return.
+ *    - scanIndexForward: Whether to return results in ascending order of the sort key.
  * @returns A promise resolving to the query result containing items and the last evaluated key.
  */
-async function queryRecords<T>(inputs: CustomQueryCommandInput): Promise<CustomQueryCommandOutput<T>> {
-  try {
-    const { tableName, lastEvaluatedKey, keyConditionExpression, expressionAttributeValues, options } = inputs;
+export async function queryRecords<T>(inputs: CustomQueryCommandInput): Promise<CustomQueryCommandOutput<T>> {
+  const { tableName, lastEvaluatedKey, keyConditionExpression, expressionAttributeValues, options } = inputs;
 
+  try {
     const queryInput: QueryCommandInput = {
       TableName: tableName,
       KeyConditionExpression: keyConditionExpression,
@@ -86,43 +87,49 @@ async function queryRecords<T>(inputs: CustomQueryCommandInput): Promise<CustomQ
       lastEvaluatedKey: result.LastEvaluatedKey ? JSON.stringify(result.LastEvaluatedKey) : '',
       items: result.Items ? (result.Items as T[]) : [],
     };
-  } catch (error: unknown) {
-    logger.info(`Error on queryRecords: ${error instanceof Error ? error : JSON.stringify(error ?? {})}`);
-    throw error instanceof Error ? error : new CustomError('Unexpected error!');
+  } catch (error) {
+    logger.error(`Error querying records from table "${tableName}": ${error}`);
+    throw error instanceof Error ? error : new CustomError('Unexpected error while querying records.');
   }
 }
 
 /**
  * Create a new record in a DynamoDB table.
  *
- * @param tName - The name of the DynamoDB table.
- * @param item - The item to create in the table.
- * @returns A promise resolving to the created item.
+ * @param input - An object containing the following properties:
+ *  - tableName: The name of the DynamoDB table.
+ *  - item: The item to create in the table.
+ * @returns A promise resolving to the created item of type T.
  */
-async function createRecord<T>(tName: string, item: T): Promise<T | undefined> {
+export async function createRecord<T>(input: CustomPutCommandInput<T>): Promise<T> {
+  const { tableName, item } = input;
+
   try {
     await docClient.send(
       new PutCommand({
-        TableName: tName,
+        TableName: tableName,
         Item: item as Record<string, any>,
       })
     );
     return item;
-  } catch (error: unknown) {
-    logger.info(`Error on createItem: ${error instanceof Error ? error : JSON.stringify(error ?? {})}`);
-    throw error instanceof Error ? error : new CustomError('Unexpected error!');
+  } catch (error) {
+    logger.error(`Error creating record in table "${tableName}": ${error}`);
+    throw error instanceof Error ? error : new CustomError('Unexpected error while creating record.');
   }
 }
 
 /**
  * Update an existing record in a DynamoDB table.
  *
- * @param tName - The name of the DynamoDB table.
- * @param key - The key identifying the record to update.
- * @param item - The partial item containing fields to update.
+ * @param input - An object containing the following properties:
+ *  - tableName: The name of the DynamoDB table.
+ *  - key: A map representing the key identifying the record to update.
+ *  - item: A partial object containing the fields to update and their new values.
  * @returns A promise resolving to the updated record of type T.
  */
-async function updateRecord<T>(tName: string, key: Record<string, any>, item: Partial<T>): Promise<T | undefined> {
+export async function updateRecord<T>(input: CustomUpdateItemInput<T>): Promise<T | undefined> {
+  const { tableName, item, key } = input;
+
   try {
     const updateExpressionParts: string[] = [];
     const expressionAttributeValues: Record<string, any> = {};
@@ -137,7 +144,7 @@ async function updateRecord<T>(tName: string, key: Record<string, any>, item: Pa
 
     const result = await docClient.send(
       new UpdateCommand({
-        TableName: tName,
+        TableName: tableName,
         Key: key,
         UpdateExpression: updateExpression,
         ExpressionAttributeValues: expressionAttributeValues,
@@ -146,11 +153,8 @@ async function updateRecord<T>(tName: string, key: Record<string, any>, item: Pa
     );
 
     return result.Attributes as T;
-  } catch (error: unknown) {
-    logger.info(`Error on updateRecord: ${error instanceof Error ? error : JSON.stringify(error ?? {})}`);
-    throw error instanceof Error ? error : new CustomError('Unexpected error!');
+  } catch (error) {
+    logger.error(`Error updating record in table "${tableName}": ${error}`);
+    throw error instanceof Error ? error : new CustomError('Unexpected error while updating record.');
   }
 }
-
-export { getRecordByKey, queryRecords, createRecord, updateRecord };
-export default docClient;
