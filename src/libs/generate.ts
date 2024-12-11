@@ -26,14 +26,14 @@ const authHeader = {
   },
 };
 
-function createDefaultFunc(dirname: string, handlerName: string, other: object = {}) {
+export function createDefaultFunc(dirname: string, handlerName: string, other: object = {}) {
   return {
     handler: `${generatePathname(dirname)}/handler.${handlerName}`,
     ...other,
   };
 }
 
-function createDefaultApiGatewayFunc(
+export function createDefaultApiGatewayFunc(
   dirname: string,
   funcNm: string,
   method: string,
@@ -55,15 +55,15 @@ function createDefaultApiGatewayFunc(
   };
 }
 
-function createAuthApiGatewayFunc(
+export function createAuthApiGatewayFunc(
   dirname: string,
-  handlerName: string,
+  handler: string,
   method: string,
   url: string,
   other: object = {}
 ): object {
   return {
-    handler: `${generatePathname(dirname)}/handler.${handlerName}`,
+    handler: `${generatePathname(dirname)}/handler.${handler}`,
     events: [
       {
         http: {
@@ -77,4 +77,25 @@ function createAuthApiGatewayFunc(
   };
 }
 
-export { createDefaultFunc, createDefaultApiGatewayFunc, createAuthApiGatewayFunc };
+export function createScheduledFunc(
+  dir: string,
+  handler: string,
+  schedule: string[],
+  name?: string,
+  description = 'description',
+  other: object = {}
+) {
+  return {
+    handler: `${generatePathname(dir)}/handler.${handler}`,
+    events: [
+      {
+        schedule: {
+          rate: schedule,
+          name: name ? name : handler,
+          description: description,
+          ...other,
+        },
+      },
+    ],
+  };
+}

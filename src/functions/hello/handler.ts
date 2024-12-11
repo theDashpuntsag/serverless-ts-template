@@ -5,7 +5,7 @@ import { middyfy } from '@libs/middyfy';
 import { handleApiFuncError } from '@libs/error';
 import logger from '@libs/winston';
 
-const printHelloWorldFunc: ApiFunType<object> = async (event): Promise<ApiFuncRes> => {
+const testFunction: ApiFunType<object> = async (event): Promise<ApiFuncRes> => {
   try {
     logger.info(`Event: ${JSON.stringify(event.body)}`);
     return formatJSONApiResponse(event.body);
@@ -15,4 +15,4 @@ const printHelloWorldFunc: ApiFunType<object> = async (event): Promise<ApiFuncRe
   }
 };
 
-export const printHelloWorld = middyfy(printHelloWorldFunc);
+export const testFunc = middyfy(testFunction);

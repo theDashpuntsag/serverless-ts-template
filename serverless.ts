@@ -1,5 +1,5 @@
 import type { AWS } from '@serverless/typescript';
-import { printHelloWorld } from '@functions/hello';
+import { testFunc } from '@functions/hello';
 
 const serverlessConfig: AWS = {
   service: 'service-name',
@@ -15,7 +15,7 @@ const serverlessConfig: AWS = {
     logRetentionInDays: 365,
   },
   functions: {
-    printHelloWorld,
+    testFunc,
   },
   package: { individually: true },
   custom: {
