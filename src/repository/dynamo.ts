@@ -66,12 +66,20 @@ export async function getRecordByKey<T>(inputs: CustomGetCommandInput): Promise<
  * @returns A promise resolving to the query result containing items and the last evaluated key.
  */
 export async function queryRecords<T>(inputs: CustomQueryCommandInput): Promise<CustomQueryCommandOutput<T>> {
-  const { tableName, lastEvaluatedKey, keyConditionExpression, expressionAttributeValues, options } = inputs;
+  const {
+    tableName,
+    lastEvaluatedKey,
+    keyConditionExpression,
+    expressionAttributeValues,
+    expressionAttributeNames,
+    options,
+  } = inputs;
 
   try {
     const queryInput: QueryCommandInput = {
       TableName: tableName,
       KeyConditionExpression: keyConditionExpression,
+      ExpressionAttributeNames: expressionAttributeNames, // Include this
       ExpressionAttributeValues: expressionAttributeValues,
       IndexName: options?.indexName,
       FilterExpression: options?.filterExpression,

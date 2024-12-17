@@ -4,6 +4,7 @@ export type CustomQueryCommandInput = {
   tableName: string;
   lastEvaluatedKey?: string;
   keyConditionExpression: string;
+  expressionAttributeNames: Record<string, any>;
   expressionAttributeValues: Record<string, any>;
   options?: {
     indexName?: string;
