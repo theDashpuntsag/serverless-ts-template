@@ -1,7 +1,4 @@
-import { GetCommand, UpdateCommand, PutCommand, QueryCommand } from '@aws-sdk/lib-dynamodb';
-import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
-import { DynamoDBDocumentClient } from '@aws-sdk/lib-dynamodb';
-
+import type { DescribeTableCommandOutput } from '@aws-sdk/client-dynamodb';
 import type {
   GetCommandOutput,
   QueryCommandInput,
@@ -11,10 +8,13 @@ import type {
 import type {
   CustomGetCommandInput,
   CustomPutCommandInput,
-  CustomQueryCommandInput,
   CustomQueryCommandOutput,
   CustomUpdateItemInput,
 } from '@type/dynamo.types';
+
+import { GetCommand, UpdateCommand, PutCommand, QueryCommand } from '@aws-sdk/lib-dynamodb';
+import { DescribeTableCommand, DynamoDBClient } from '@aws-sdk/client-dynamodb';
+import { DynamoDBDocumentClient } from '@aws-sdk/lib-dynamodb';
 
 import CustomError from '@configs/custom-error';
 import logger from '@libs/winston';
@@ -22,6 +22,35 @@ import logger from '@libs/winston';
 // Initialize DynamoDB client
 const dynamoDb = new DynamoDBClient({ region: 'ap-southeast-1' });
 const docClient = DynamoDBDocumentClient.from(dynamoDb);
+
+/**
+ * Retrieves the description of a DynamoDB table.
+ *
+ * @param {string} tableName - The name of the DynamoDB table to describe.
+ * @returns {Promise<DescribeTableCommandOutput>} - A promise that resolves to the table description details.
+ *
+ * @throws {Error} - Throws an error if the table description retrieval fails.
+ *
+ * @example
+ * ```ts
+ * const tableDescription = await getTableDescription('example-table');
+ * console.log(tableDescription.Table);
+ * ```
+ */
+export async function getTableDescription(tableName: string): Promise<DescribeTableCommandOutput> {
+  // Initialize DynamoDB client
+  const client = new DynamoDBClient({ region: 'your-region' }); // Replace 'your-region' with your AWS region
+  try {
+    // Send DescribeTableCommand to fetch table details
+    const command = new DescribeTableCommand({ TableName: tableName });
+    const response = await client.send(command);
+
+    return response;
+  } catch (error) {
+    console.error(`Failed to retrieve table description for "${tableName}":`, error);
+    throw new Error(`Unable to describe table "${tableName}": ${error instanceof Error ? error.message : error}`);
+  }
+}
 
 /**
  * Retrieve a single record from a DynamoDB table by its key.
@@ -37,10 +66,7 @@ export async function getRecordByKey<T>(inputs: CustomGetCommandInput): Promise<
 
   try {
     const result: GetCommandOutput = await docClient.send(
-      new GetCommand({
-        TableName: tableName,
-        Key: { [key]: value },
-      })
+      new GetCommand({ TableName: tableName, Key: { [key]: value } })
     );
     return result.Item ? (result.Item as T) : undefined;
   } catch (error) {
@@ -50,53 +76,39 @@ export async function getRecordByKey<T>(inputs: CustomGetCommandInput): Promise<
 }
 
 /**
- * Query multiple records from a DynamoDB table based on a key condition.
+ * Queries records from a DynamoDB table using the AWS SDK v3.
  *
- * @param inputs - An object containing the following properties:
- *  - tableName: The name of the DynamoDB table.
- *  - lastEvaluatedKey: A string representing the last evaluated key for pagination (optional).
- *  - keyConditionExpression: A string defining the key condition for the query.
- *  - expressionAttributeValues: A map of attribute values used in the key condition expression.
- *  - options: Additional query options (optional), including:
- *    - indexName: The name of the index to query.
- *    - filterExpression: A filter expression to apply after the query.
- *    - projectionExpression: A projection expression to return specific attributes.
- *    - limit: The maximum number of items to return.
- *    - scanIndexForward: Whether to return results in ascending order of the sort key.
- * @returns A promise resolving to the query result containing items and the last evaluated key.
+ * @template T - The type of items expected in the query result.
+ * @param {QueryCommandInput} inputs - The query parameters, including the table name, key conditions,
+ *                                     and any optional query attributes (e.g., filters, projections).
+ * @returns {Promise<CustomQueryCommandOutput<T>>} - A promise that resolves to an object containing:
+ *   - `lastEvaluatedKey` (string): A serialized representation of the last evaluated key for pagination.
+ *   - `items` (T[]): An array of items returned from the query, typed as `T`.
+ * @throws {CustomError | Error} - Throws a `CustomError` if the error is unexpected or the original error
+ *                                 if it is an instance of `Error`. Logs the error before rethrowing.
+ *
+ * @example
+ * ```ts
+ * const queryInput: QueryCommandInput = {
+ *   TableName: 'example-table',
+ *   KeyConditionExpression: 'userId = :userId',
+ *   ExpressionAttributeValues: { ':userId': { S: '12345' } },
+ * };
+ *
+ * const result = await queryRecords<MyItemType>(queryInput);
+ * console.log(result.items);
+ * console.log(result.lastEvaluatedKey);
+ * ```
  */
-export async function queryRecords<T>(inputs: CustomQueryCommandInput): Promise<CustomQueryCommandOutput<T>> {
-  const {
-    tableName,
-    lastEvaluatedKey,
-    keyConditionExpression,
-    expressionAttributeValues,
-    expressionAttributeNames,
-    options,
-  } = inputs;
-
+export async function queryRecords<T>(inputs: QueryCommandInput): Promise<CustomQueryCommandOutput<T>> {
   try {
-    const queryInput: QueryCommandInput = {
-      TableName: tableName,
-      KeyConditionExpression: keyConditionExpression,
-      ExpressionAttributeNames: expressionAttributeNames, // Include this
-      ExpressionAttributeValues: expressionAttributeValues,
-      IndexName: options?.indexName,
-      FilterExpression: options?.filterExpression,
-      ProjectionExpression: options?.projectionExpression,
-      Limit: options?.limit,
-      ScanIndexForward: options?.scanIndexForward,
-      ExclusiveStartKey: lastEvaluatedKey ? JSON.parse(lastEvaluatedKey) : undefined,
-    };
-
-    const result: QueryCommandOutput = await docClient.send(new QueryCommand(queryInput));
-
+    const result: QueryCommandOutput = await docClient.send(new QueryCommand(inputs));
     return {
       lastEvaluatedKey: result.LastEvaluatedKey ? JSON.stringify(result.LastEvaluatedKey) : '',
       items: result.Items ? (result.Items as T[]) : [],
     };
   } catch (error) {
-    logger.error(`Error querying records from table "${tableName}": ${error}`);
+    logger.error(`Error querying records from table "${inputs.TableName}": ${error}`);
     throw error instanceof Error ? error : new CustomError('Unexpected error while querying records.');
   }
 }
