@@ -25,6 +25,7 @@
   "bugs": {
     "url": "https://github.com/theDashpuntsag/serverless-ts-template/issues"
   },
+  "packageManager": "pnpm@9.15.0",
   "homepage": "https://github.com/theDashpuntsag/serverless-ts-template#readme",
   "dependencies": {
     "@aws-sdk/client-dynamodb": "^3.693.0",
