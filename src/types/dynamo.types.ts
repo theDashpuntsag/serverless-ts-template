@@ -3,6 +3,8 @@ import { z } from 'zod';
 // ------------------------------------ Non-generic types --------------------------------------------------
 export const QueryOptionsSchema = z
   .object({
+    ExpressionAttributeNames: z.record(z.string()).optional(),
+    ExpressionAttributeValues: z.record(z.any()).optional(),
     ProjectionExpression: z.string().optional(),
     ScanIndexForward: z.boolean().optional(),
     FilterExpression: z.string().optional(),

@@ -8,6 +8,10 @@ import type { QueryRequest } from '@type/dynamo.types';
  * @param partitionKeyType - The type of the partition key ('S', 'N', 'BOOL', etc.).
  * @returns The parsed value of the partition key.
  * @throws Error if an unsupported partitionKeyType is provided.
+ *
+ * @example
+ * parsePartitionKeyValue("123", "N"); // Output: 123 (number)
+ * parsePartitionKeyValue("true", "BOOL"); // Output: true (boolean)
  */
 export function parsePartitionKeyValue(partitionKey: string, partitionKeyType: string): any {
   switch (partitionKeyType) {
@@ -48,12 +52,16 @@ export function parsePartitionKeyValue(partitionKey: string, partitionKeyType: s
 /**
  * Generates a DynamoDB KeyConditionExpression based on the provided inputs.
  *
- * @param sortKey - The first value for the sort key condition (required for most operations).
- * @param skValue2 - The second value for range-based operations (optional, required for BETWEEN).
- * @param operation - The comparison operator to use in the expression. Defaults to '='.
- *                    Supported operations: '=', '<', '>', '<=', '>=', 'BETWEEN', 'BEGINS_WITH'.
- * @returns A valid DynamoDB KeyConditionExpression string.
- * @throws Will throw an error if invalid operation is provided or required parameters are missing.
+ * @param sortKey - The sort key value used in the condition (if applicable).
+ * @param skValue2 - The secondary sort key value for range-based operations (optional).
+ * @param skComparator - The comparison operator. Defaults to '='.
+ *                       Supported operators: '=', '<', '>', '<=', '>=', 'BETWEEN', 'BEGINS_WITH'.
+ * @returns A valid KeyConditionExpression string.
+ * @throws Error if invalid operation or missing parameters for BETWEEN or BEGINS_WITH.
+ *
+ * @example
+ * generateKeyConditionExpression("age", "30", ">"); // Output: "#pk = :pk AND #sk > :sk"
+ * generateKeyConditionExpression("name", undefined, "BEGINS_WITH"); // Throws Error
  */
 export function generateKeyConditionExpression(sortKey?: string, skValue2?: string, skComparator = '='): string {
   let keyConditionExpression = '#pk = :pk'; // Always include the primary key condition
@@ -91,10 +99,54 @@ export function generateKeyConditionExpression(sortKey?: string, skValue2?: stri
 }
 
 /**
- * Returns the DynamoDB operator symbol or keyword based on the operation key.
+ * Parses a DynamoDB ProjectionExpression string and generates an object mapping
+ * reserved keywords to their actual attribute names for use in ExpressionAttributeNames.
  *
- * @param operation - The operation key as a string.
- * @returns A valid DynamoDB operator symbol or keyword.
+ * DynamoDB reserved keywords (e.g., "id", "type") must be prefixed with `#` in a ProjectionExpression.
+ * This function extracts those prefixed keywords and maps them to their original attribute names.
+ *
+ * @param projectionExpression - The ProjectionExpression string containing attribute names,
+ * some of which may be prefixed with `#` to denote reserved keywords.
+ * Example: "#id, title, iconUrl, #type, minAmount, maxAmount"
+ *
+ * @returns A mapping object where the keys are the prefixed keywords (e.g., "#id")
+ * and the values are the actual attribute names (e.g., "id").
+ * Example: { "#id": "id", "#type": "type" }
+ *
+ * @example
+ * const projectionExpression = "#id, title, #type, minAmount";
+ * const expressionAttributeNames = getExpressionAttributeNByProjection(projectionExpression);
+ * console.log(expressionAttributeNames);
+ * // Output: { "#id": "id", "#type": "type" }
+ */
+export function getExpressionAttributeNByProjection(projectionExpression: string): Record<string, string> {
+  const reservedKeywords = projectionExpression
+    .split(',')
+    .map((attr) => attr.trim()) // Trim spaces around attributes
+    .filter((attr) => attr.startsWith('#')); // Select only attributes prefixed with '#'
+
+  const expressionAttributeNames: Record<string, string> = {};
+
+  reservedKeywords.forEach((keyword) => {
+    // Remove the '#' prefix for the actual attribute name
+    const actualName = keyword.replace('#', '');
+    expressionAttributeNames[keyword] = actualName;
+  });
+
+  return expressionAttributeNames;
+}
+
+/**
+ * Maps an operation key to a DynamoDB operator symbol or keyword.
+ *
+ * @param operation - The operation key to map. Can be a shorthand or descriptive key.
+ * @returns The corresponding DynamoDB operator symbol or keyword.
+ * @throws Error if the operation key is invalid.
+ *
+ * @example
+ * getOperatorSymbolByKey("="); // Output: "="
+ * getOperatorSymbolByKey("BETWEEN"); // Output: "BETWEEN"
+ * getOperatorSymbolByKey("INVALID"); // Throws Error
  */
 export function getOperatorSymbolByKey(operation: string): string {
   switch (operation.toUpperCase()) {
@@ -123,11 +175,25 @@ export function getOperatorSymbolByKey(operation: string): string {
 }
 
 /**
- * Builds a DynamoDB QueryCommandInput based on QueryRequest.
+ * Builds a DynamoDB QueryCommandInput object based on the given query request.
  *
- * @param queryRequest - The validated QueryRequest object.
- * @param tableName - The table name for the DynamoDB query.
- * @returns A valid DynamoDB QueryCommandInput.
+ * @param queryRequest - An object containing all necessary query parameters.
+ * @param tableName - The name of the DynamoDB table to query.
+ * @returns A QueryCommandInput object ready to be used with DynamoDB.
+ *
+ * @example
+ * const queryRequest = {
+ *   pKey: "user123",
+ *   pKeyType: "S",
+ *   pKeyProp: "userId",
+ *   sKey: "order456",
+ *   sKeyType: "S",
+ *   sKeyProp: "orderId",
+ *   skComparator: "=",
+ * };
+ * const tableName = "OrdersTable";
+ * const queryInput = buildDynamoQueryInput(queryRequest, tableName);
+ * console.log(queryInput);
  */
 export function buildDynamoQueryInput(queryRequest: QueryRequest, tableName: string): QueryCommandInput {
   const {
@@ -136,7 +202,7 @@ export function buildDynamoQueryInput(queryRequest: QueryRequest, tableName: str
     pKeyType,
     pKeyProp,
     sKey,
-    sKeyType: skeyType,
+    sKeyType,
     sKeyProp,
     skValue2,
     skValue2Type,
@@ -144,40 +210,24 @@ export function buildDynamoQueryInput(queryRequest: QueryRequest, tableName: str
     skComparator,
     limit,
     lastEvaluatedKey,
-    sorting,
+    options,
   } = queryRequest;
 
   // Step 1: KeyConditionExpression
   const keyConditionExpression = generateKeyConditionExpression(sKey, skValue2, skComparator);
 
   // Step 2: ExpressionAttributeNames
-  const expressionAttributeNames: Record<string, string> = {
-    '#pk': pKeyProp, // Partition key mapping
-  };
-  if (sKeyProp) {
-    expressionAttributeNames['#sk'] = sKeyProp;
-  }
-  if (skValue2Prop) {
-    expressionAttributeNames['#sk1'] = skValue2Prop;
-  }
+  const expressionAttributeNames: Record<string, string> = { '#pk': pKeyProp };
+  if (sKeyProp) expressionAttributeNames['#sk'] = sKeyProp;
+  if (skValue2Prop) expressionAttributeNames['#sk1'] = skValue2Prop;
 
   // Step 3: ExpressionAttributeValues with type conversion
-  const expressionAttributeValues: Record<string, any> = {
-    ':pk': parsePartitionKeyValue(pKey, pKeyType),
-  };
-
-  if (sKey) {
-    expressionAttributeValues[':sk'] = parsePartitionKeyValue(sKey, skeyType || 'S');
-  }
-
-  if (skValue2) {
-    expressionAttributeValues[':skValue2'] = parsePartitionKeyValue(skValue2, skValue2Type || 'S');
-  }
+  const expressionAttributeValues: Record<string, any> = { ':pk': parsePartitionKeyValue(pKey, pKeyType) };
+  if (sKey) expressionAttributeValues[':sk'] = parsePartitionKeyValue(sKey, sKeyType || 'S');
+  if (skValue2) expressionAttributeValues[':skValue2'] = parsePartitionKeyValue(skValue2, skValue2Type || 'S');
 
   // Step 4: Sorting Order
-  const scanIndexForward = sorting === 'ASC' ? true : false;
-
-  // Step 5: Build QueryCommandInput
+  limit ? Number(limit) : 10;
   return {
     TableName: tableName,
     IndexName: indexName,
@@ -185,7 +235,7 @@ export function buildDynamoQueryInput(queryRequest: QueryRequest, tableName: str
     ExpressionAttributeNames: expressionAttributeNames,
     ExpressionAttributeValues: expressionAttributeValues,
     ExclusiveStartKey: lastEvaluatedKey ? JSON.parse(lastEvaluatedKey) : undefined,
-    Limit: limit ? parseInt(limit, 10) : 10,
-    ScanIndexForward: sorting ? scanIndexForward : undefined,
+    Limit: limit ? Number(limit) : 10,
+    ...options,
   };
 }
