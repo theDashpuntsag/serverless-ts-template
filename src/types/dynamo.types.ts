@@ -1,12 +1,20 @@
 import { z } from 'zod';
 
 // ------------------------------------ Non-generic types --------------------------------------------------
+export const QueryOptionsSchema = z
+  .object({
+    ProjectionExpression: z.string().optional(),
+    ScanIndexForward: z.boolean().optional(),
+    FilterExpression: z.string().optional(),
+  })
+  .optional();
+
+export type QueryOptions = z.infer<typeof QueryOptionsSchema>;
+
 export const QueryRequestSchema = z.object({
-  indexName: z.string().min(1, 'Index name is required'),
   pKey: z.string().min(1, 'Partition key is required'),
-  pKeyType: z.string(),
-  pKeyProp: z.string(),
-  limit: z.string().optional(),
+  pKeyType: z.string().min(1, 'Partition key type is required'),
+  pKeyProp: z.string().min(1, 'Partition key property is required'),
   sKey: z.string().optional(),
   sKeyType: z.string().optional(),
   sKeyProp: z.string().optional(),
@@ -14,8 +22,11 @@ export const QueryRequestSchema = z.object({
   skValue2Type: z.string().optional(),
   skValue2Prop: z.string().optional(),
   skComparator: z.string().optional(),
+  indexName: z.string().optional(),
+  limit: z.string().optional(),
   lastEvaluatedKey: z.string().optional(),
   sorting: z.string().optional(),
+  options: QueryOptionsSchema,
 });
 
 export type QueryRequest = z.infer<typeof QueryRequestSchema>;
@@ -24,6 +35,7 @@ export const CustomGetCommandInputSchema = z.object({
   tableName: z.string(),
   key: z.string(),
   value: z.any(),
+  options: QueryOptionsSchema,
 });
 
 export type CustomGetCommandInput = z.infer<typeof CustomGetCommandInputSchema>;

@@ -39,11 +39,10 @@ const docClient = DynamoDBDocumentClient.from(dynamoDb);
  */
 export async function getTableDescription(tableName: string): Promise<DescribeTableCommandOutput> {
   // Initialize DynamoDB client
-  const client = new DynamoDBClient({ region: 'your-region' }); // Replace 'your-region' with your AWS region
   try {
     // Send DescribeTableCommand to fetch table details
     const command = new DescribeTableCommand({ TableName: tableName });
-    const response = await client.send(command);
+    const response = await docClient.send(command);
 
     return response;
   } catch (error) {
@@ -62,11 +61,11 @@ export async function getTableDescription(tableName: string): Promise<DescribeTa
  * @returns A promise resolving to the retrieved record of type T or undefined if not found.
  */
 export async function getRecordByKey<T>(inputs: CustomGetCommandInput): Promise<T | undefined> {
-  const { tableName, key, value } = inputs;
+  const { tableName, key, value, options } = inputs;
 
   try {
     const result: GetCommandOutput = await docClient.send(
-      new GetCommand({ TableName: tableName, Key: { [key]: value } })
+      new GetCommand({ TableName: tableName, Key: { [key]: value }, ...options })
     );
     return result.Item ? (result.Item as T) : undefined;
   } catch (error) {
