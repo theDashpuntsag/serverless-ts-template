@@ -1,34 +1,34 @@
-import { createDefaultApiGatewayFunc } from '@libs/generate';
+import { createDefaultApiFunction } from '@libs/functions';
 
-export const getExampleTableDesc = createDefaultApiGatewayFunc(
+export const getExampleTableDesc = createDefaultApiFunction(
   __dirname,
   'getExampleTableDesc',
   'get',
   '/v1/example/table-desc'
 );
 
-export const getExampleItemById = createDefaultApiGatewayFunc(
+export const getExampleItemById = createDefaultApiFunction(
   __dirname,
   'getExampleItemById',
   'get',
   '/v1/example/item/{id}'
 );
 
-export const getExampleItemsByQuery = createDefaultApiGatewayFunc(
+export const getExampleItemsByQuery = createDefaultApiFunction(
   __dirname,
   'getExampleItemsByQuery',
   'get',
   '/v1/example/items'
 );
 
-export const postCreateExampleItem = createDefaultApiGatewayFunc(
+export const postCreateExampleItem = createDefaultApiFunction(
   __dirname,
   'postCreateExampleItem',
   'post',
   '/v1/example/item'
 );
 
-export const putUpdateExampleItem = createDefaultApiGatewayFunc(
+export const putUpdateExampleItem = createDefaultApiFunction(
   __dirname,
   'putUpdateExampleItem',
   'put',

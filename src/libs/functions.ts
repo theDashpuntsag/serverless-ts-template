@@ -1,53 +1,27 @@
-function generatePathname(context: string): string {
-  return `${context.split(process.cwd())[1].substring(1).replace(/\\/g, '/')}`;
-}
+import { authenticatedApiFunctionConfig, defaultApiFunctionConfig, generatePathname } from './utils';
 
-const defaultConfig = {
-  cors: {
-    origin: '*',
-    headers: ['Content-Type', 'X-Amz-Date', 'Authorization', 'X-Api-Key', 'X-Amz-Security-Token', 'X-Amz-User-Agent'],
-  },
-};
-
-const authHeader = {
-  authorizer: {
-    type: 'COGNITO_USER_POOLS',
-    authorizerId: {
-      Ref: 'CognitoAuthorizer',
-    },
-  },
-  throttling: {
-    maxRequestsPerSecond: 10000,
-    maxConcurrentRequests: 5000,
-  },
-  cors: {
-    origin: '*',
-    headers: ['Content-Type', 'X-Amz-Date', 'Authorization', 'X-Api-Key', 'X-Amz-Security-Token', 'X-Amz-User-Agent'],
-  },
-};
-
-export function createDefaultFunc(dirname: string, handlerName: string, other: object = {}) {
+export function createDefaultFunction(dirname: string, handlerName: string, other: object = {}) {
   return {
     handler: `${generatePathname(dirname)}/handler.${handlerName}`,
     ...other,
   };
 }
 
-export function createDefaultApiGatewayFunc(
+export function createDefaultApiFunction(
   dirname: string,
-  funcNm: string,
+  funcName: string,
   method: string,
   url: string,
   other: object = {}
 ): object {
   return {
-    handler: `${generatePathname(dirname)}/handler.${funcNm}`,
+    handler: `${generatePathname(dirname)}/handler.${funcName}`,
     events: [
       {
         http: {
           method: method,
           path: url,
-          ...defaultConfig,
+          ...defaultApiFunctionConfig,
         },
       },
     ],
@@ -55,7 +29,7 @@ export function createDefaultApiGatewayFunc(
   };
 }
 
-export function createAuthApiGatewayFunc(
+export function createAuthenticatedApiFunction(
   dirname: string,
   handler: string,
   method: string,
@@ -69,7 +43,7 @@ export function createAuthApiGatewayFunc(
         http: {
           method: method,
           path: url,
-          ...authHeader,
+          ...authenticatedApiFunctionConfig,
         },
       },
     ],

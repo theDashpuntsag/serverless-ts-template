@@ -1,7 +1,7 @@
-import { LbdFuncResponse } from '@type/util.types';
-import { APIGatewayProxyResultV2 as ApiFuncRes } from 'aws-lambda';
+import type { LbdFuncResponse as FuncRes } from '@/types/util.types';
+import type { APIGatewayProxyResultV2 as ApiFuncRes } from 'aws-lambda';
 
-export function formatJSONResponse(response: object, statusCode: number = 200, other: object = {}): LbdFuncResponse {
+export function formatResponse(response: object, statusCode: number = 200, other: object = {}): FuncRes {
   return {
     statusCode,
     body: JSON.stringify(response),
@@ -9,7 +9,7 @@ export function formatJSONResponse(response: object, statusCode: number = 200, o
   };
 }
 
-export function formatJSONApiResponse(response: object, statusCode: number = 200, other: object = {}): ApiFuncRes {
+export function formatApiResponse(response: object, statusCode: number = 200, other: object = {}): ApiFuncRes {
   return {
     statusCode,
     body: JSON.stringify(response),

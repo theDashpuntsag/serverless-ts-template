@@ -4,7 +4,7 @@ import {
   CustomPutCommandInput,
   CustomQueryCommandInput,
   CustomUpdateItemInput,
-} from '@type/dynamo.types';
+} from '@/types/dynamo.types';
 import {
   extractExpAttributeNamesFromProjection,
   extractExpAttributeNamesFromUpdate,
@@ -82,8 +82,8 @@ export function buildGetCommandInput(input: CustomGetCommandInput): GetCommandIn
 }
 
 export function buildPutCommandInput<T>(input: CustomPutCommandInput<T>): PutCommandInput {
-  const { tableName: TableName, item } = input;
-  return { TableName, Item: item as Record<string, any> };
+  const { tableName: TableName, item, returnValues = 'NONE' } = input;
+  return { TableName, Item: item as Record<string, any>, ReturnValues: returnValues };
 }
 
 export function buildUpdateCommandInput<T>(input: CustomUpdateItemInput<T>): UpdateCommandInput {
@@ -93,7 +93,7 @@ export function buildUpdateCommandInput<T>(input: CustomUpdateItemInput<T>): Upd
     key: Key,
     conditionalExp: ConditionExpression,
     extraExpressionAttributeValues,
-    returnValues: ReturnValues,
+    returnValues: ReturnValues = 'NONE',
   } = input;
 
   const updateExpParts: string[] = [];
