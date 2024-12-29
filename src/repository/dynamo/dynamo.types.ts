@@ -12,7 +12,6 @@ export const QueryRequestSchema = z
     sKeyProp: z.string().optional(),
     skValue2: z.string().optional(),
     skValue2Type: z.string().optional(),
-    skValue2Prop: z.string().optional(),
     skComparator: z.string().optional(),
     indexName: z.string().optional(),
     limit: z.string().optional(),
@@ -66,6 +65,17 @@ export const CustomQueryCommandInputSchema = z.object({
 
 export type CustomQueryCommandInput = z.infer<typeof CustomQueryCommandInputSchema>;
 
+export const CustomQueryCommandOutputSchema = <T extends z.ZodTypeAny>(itemSchema: T) =>
+  z.object({
+    lastEvaluatedKey: z.string().optional(),
+    items: z.array(itemSchema),
+  });
+
+export type CustomQueryCommandOutput<T> = {
+  lastEvaluatedKey: string | undefined;
+  items: T[];
+};
+
 export const CustomGetCommandInputSchema = z.object({
   tableName: z.string(),
   key: z.record(z.string(), z.any()),
@@ -79,11 +89,19 @@ export const CustomPutCommandInputSchema = <T extends z.ZodTypeAny>(itemSchema: 
   z.object({
     tableName: z.string(),
     item: itemSchema,
+    conditionalExp: z.string().optional(),
+    extraExpAttributeNameKeys: z.string().optional(),
+    extraExpressionAttributeValKeys: z.string().optional(),
+    returnValues: z.string().optional(),
   });
 
 export type CustomPutCommandInput<T> = {
   tableName: string;
   item: T;
+  conditionalExp?: string;
+  extraExpAttributeNameKeys?: string;
+  extraExpressionAttributeValues?: Record<string, any>;
+  returnValues?: ReturnValue;
 };
 
 export const CustomUpdateItemInputSchema = <T extends z.ZodTypeAny>(itemSchema: T) =>
@@ -105,15 +123,4 @@ export type CustomUpdateItemInput<T> = {
   extraExpAttributeNameKeys?: string;
   extraExpressionAttributeValues?: Record<string, any>;
   returnValues?: ReturnValue;
-};
-
-export const CustomQueryCommandOutputSchema = <T extends z.ZodTypeAny>(itemSchema: T) =>
-  z.object({
-    lastEvaluatedKey: z.string().optional(),
-    items: z.array(itemSchema),
-  });
-
-export type CustomQueryCommandOutput<T> = {
-  lastEvaluatedKey: string | undefined;
-  items: T[];
 };

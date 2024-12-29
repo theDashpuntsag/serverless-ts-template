@@ -1,3 +1,3 @@
-import { createDefaultApiGatewayFunc } from '@libs/generate';
+import { createDefaultApiFunction } from '@libs/functions';
 
-export const testFunc = createDefaultApiGatewayFunc(__dirname, 'testFunc', 'post', '/v1/test');
+export const testFunc = createDefaultApiFunction(__dirname, 'testFunc', 'post', '/v1/test');

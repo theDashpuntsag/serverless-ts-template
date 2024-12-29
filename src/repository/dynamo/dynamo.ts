@@ -5,20 +5,20 @@ import type {
   CustomQueryCommandInput,
   CustomQueryCommandOutput,
   CustomUpdateItemInput,
-} from '@type/dynamo.types';
+} from './dynamo.types';
 
-import { GetCommand, UpdateCommand, PutCommand, QueryCommand } from '@aws-sdk/lib-dynamodb';
 import { DescribeTableCommand, DynamoDBClient } from '@aws-sdk/client-dynamodb';
+import { GetCommand, UpdateCommand, PutCommand, QueryCommand } from '@aws-sdk/lib-dynamodb';
 import { DynamoDBDocumentClient } from '@aws-sdk/lib-dynamodb';
-
-import CustomError from '@configs/custom-error';
-import logger from '@libs/winston';
 import {
   buildGetCommandInput,
   buildPutCommandInput,
   buildQueryCommandInput,
   buildUpdateCommandInput,
 } from './dynamo-builder';
+
+import CustomError from '@/error/custom-error';
+import logger from '@/libs/winston';
 
 // Initialize DynamoDB client
 const dynamoDb = new DynamoDBClient({ region: 'ap-southeast-1' });
@@ -28,7 +28,7 @@ export async function getTableDescription(tableName: string): Promise<DescribeTa
   try {
     return await docClient.send(new DescribeTableCommand({ TableName: tableName }));
   } catch (error: unknown) {
-    console.error(`Failed to retrieve table description for "${tableName}":`, error);
+    logger.error(`Failed to retrieve table description for "${tableName}":`, error);
     throw new Error(`Unable to describe table "${tableName}": ${error instanceof Error ? error.message : error}`);
   }
 }

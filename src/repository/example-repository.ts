@@ -1,5 +1,5 @@
 import type { DescribeTableCommandOutput } from '@aws-sdk/client-dynamodb';
-import type { CustomQueryCommandOutput as QueryOutput, QueryRequest } from '@type/dynamo.types';
+import type { CustomQueryCommandOutput as QueryOutput, QueryRequest } from '@/repository/dynamo';
 
 import { extractExpAttributeNamesFromProjection } from './dynamo/dynamo-utils';
 import { createRecord, getRecordByKey, getTableDescription, queryRecords, updateRecord } from './dynamo';

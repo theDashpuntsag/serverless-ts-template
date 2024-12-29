@@ -1,4 +1,4 @@
-import type { CustomAPIGatewayEvent as ApiFunc } from '@libs/api-gateway';
+import type { CustomAPIGatewayEvent as ApiFunc } from '@/libs/api-gateway';
 import type { APIGatewayProxyResultV2 as ApiFuncRes } from 'aws-lambda';
 
 import {
@@ -6,12 +6,11 @@ import {
   getExampleItemById as getExampleItemByIdService,
   getExampleItemsByQuery as getExampleItemsByQueryService,
   createExampleItem,
-} from '@services/example';
-import { handleApiFuncError } from '@libs/error';
-import { middyfy } from '@libs/middyfy';
-import { extractMetadata } from '@services/utils/cognito-auth-service';
-import { QueryRequestSchema } from '@type/dynamo.types';
-import CustomError from '@configs/custom-error';
+} from '@/services/example';
+import { handleApiFuncError, middyfy } from '@/libs';
+import { QueryRequestSchema } from '@/repository/dynamo/dynamo.types';
+import { extractMetadata } from '@/services/utils/cognito-auth-service';
+import CustomError from '@/error/custom-error';
 
 const getExampleTableDescFunc: ApiFunc<null> = async (): Promise<ApiFuncRes> => {
   try {

@@ -4,7 +4,7 @@ import {
   CustomPutCommandInput,
   CustomQueryCommandInput,
   CustomUpdateItemInput,
-} from '@type/dynamo.types';
+} from '@/repository/dynamo';
 import {
   extractExpAttributeNamesFromProjection,
   extractExpAttributeNamesFromUpdate,
@@ -34,7 +34,6 @@ export function buildQueryCommandInput(input: CustomQueryCommandInput): QueryCom
     sKeyProp,
     skValue2,
     skValue2Type = 'S',
-    skValue2Prop,
     skComparator,
     limit,
     lastEvaluatedKey,
@@ -46,14 +45,11 @@ export function buildQueryCommandInput(input: CustomQueryCommandInput): QueryCom
   const ExpressionAttributeNames: Record<string, string> = {
     '#pk': pKeyProp,
     ...(sKeyProp && { '#sk': sKeyProp }),
-    ...(skValue2Prop && { '#sk1': skValue2Prop }),
     ...(ProjectionExpression && {
       ...extractExpAttributeNamesFromProjection(ProjectionExpression),
     }),
     ...(extraExpAttributeNames && { ...extraExpAttributeNames }),
   };
-
-  console.log(ExpressionAttributeNames);
 
   const ExpressionAttributeValues: Record<string, any> = {
     ':pk': parsePartitionKeyValue(pKey, pKeyType),
@@ -82,8 +78,21 @@ export function buildGetCommandInput(input: CustomGetCommandInput): GetCommandIn
 }
 
 export function buildPutCommandInput<T>(input: CustomPutCommandInput<T>): PutCommandInput {
-  const { tableName: TableName, item } = input;
-  return { TableName, Item: item as Record<string, any> };
+  const {
+    tableName: TableName,
+    item,
+    returnValues: ReturnValues = 'NONE',
+    conditionalExp: ConditionExpression,
+    extraExpressionAttributeValues,
+  } = input;
+
+  return {
+    TableName,
+    Item: item as Record<string, any>,
+    ConditionExpression,
+    ReturnValues,
+    ExpressionAttributeNames: extraExpressionAttributeValues ? { ...extraExpressionAttributeValues } : undefined,
+  };
 }
 
 export function buildUpdateCommandInput<T>(input: CustomUpdateItemInput<T>): UpdateCommandInput {
@@ -93,7 +102,7 @@ export function buildUpdateCommandInput<T>(input: CustomUpdateItemInput<T>): Upd
     key: Key,
     conditionalExp: ConditionExpression,
     extraExpressionAttributeValues,
-    returnValues: ReturnValues,
+    returnValues: ReturnValues = 'NONE',
   } = input;
 
   const updateExpParts: string[] = [];
