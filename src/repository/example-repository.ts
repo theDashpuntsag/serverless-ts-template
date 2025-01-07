@@ -1,7 +1,6 @@
 import type { DescribeTableCommandOutput } from '@aws-sdk/client-dynamodb';
 import type { CustomQueryCommandOutput as QueryOutput, QueryRequest } from '@/repository/dynamo';
 
-import { extractExpAttributeNamesFromProjection } from './dynamo/dynamo-utils';
 import { createRecord, getRecordByKey, getTableDescription, queryRecords, updateRecord } from './dynamo';
 
 const TABLE_NAME = '';
@@ -14,8 +13,7 @@ export async function getExampleItemById(id: string, projectionExp?: string): Pr
   const params = {
     tableName: TABLE_NAME,
     key: { id },
-    projectionExp: projectionExp,
-    extraExpAttributeNames: projectionExp ? { ...extractExpAttributeNamesFromProjection(projectionExp) } : undefined,
+    projectionExpression: projectionExp,
   };
 
   return await getRecordByKey<object>(params);

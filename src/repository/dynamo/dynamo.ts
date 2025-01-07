@@ -10,15 +10,10 @@ import type {
 import { DescribeTableCommand, DynamoDBClient } from '@aws-sdk/client-dynamodb';
 import { GetCommand, UpdateCommand, PutCommand, QueryCommand } from '@aws-sdk/lib-dynamodb';
 import { DynamoDBDocumentClient } from '@aws-sdk/lib-dynamodb';
-import {
-  buildGetCommandInput,
-  buildPutCommandInput,
-  buildQueryCommandInput,
-  buildUpdateCommandInput,
-} from './dynamo-builder';
 
 import CustomError from '@/error/custom-error';
 import logger from '@/libs/winston';
+import * as build from './command';
 
 // Initialize DynamoDB client
 const dynamoDb = new DynamoDBClient({ region: 'ap-southeast-1' });
@@ -35,7 +30,7 @@ export async function getTableDescription(tableName: string): Promise<DescribeTa
 
 export async function getRecordByKey<T>(inputs: CustomGetCommandInput): Promise<T | undefined> {
   try {
-    const result = await docClient.send(new GetCommand({ ...buildGetCommandInput(inputs) }));
+    const result = await docClient.send(new GetCommand({ ...build.buildGetCommandInput(inputs) }));
     return result.Item ? (result.Item as T) : undefined;
   } catch (error: unknown) {
     logger.error(`Error retrieving record from table "${inputs.tableName}": ${error}`);
@@ -45,7 +40,7 @@ export async function getRecordByKey<T>(inputs: CustomGetCommandInput): Promise<
 
 export async function queryRecords<T>(input: CustomQueryCommandInput): Promise<CustomQueryCommandOutput<T>> {
   try {
-    const result = await docClient.send(new QueryCommand({ ...buildQueryCommandInput(input) }));
+    const result = await docClient.send(new QueryCommand({ ...build.buildQueryCommandInput(input) }));
     return {
       lastEvaluatedKey: result.LastEvaluatedKey ? JSON.stringify(result.LastEvaluatedKey) : '',
       items: result.Items ? (result.Items as T[]) : [],
@@ -58,7 +53,7 @@ export async function queryRecords<T>(input: CustomQueryCommandInput): Promise<C
 
 export async function createRecord<T>(input: CustomPutCommandInput<T>): Promise<T> {
   try {
-    await docClient.send(new PutCommand({ ...buildPutCommandInput(input) }));
+    await docClient.send(new PutCommand({ ...build.buildPutCommandInput(input) }));
     return input.item;
   } catch (error: unknown) {
     logger.error(`Error creating record in table "${input.tableName}": ${error}`);
@@ -68,7 +63,7 @@ export async function createRecord<T>(input: CustomPutCommandInput<T>): Promise<
 
 export async function updateRecord<T>(input: CustomUpdateItemInput<T>): Promise<T | undefined> {
   try {
-    const result = await docClient.send(new UpdateCommand({ ...buildUpdateCommandInput<T>(input) }));
+    const result = await docClient.send(new UpdateCommand({ ...build.buildUpdateCommandInput<T>(input) }));
     return result.Attributes as T;
   } catch (error: unknown) {
     logger.error(`Error updating record in table "${input.tableName}": ${error}`);
