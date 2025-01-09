@@ -20,9 +20,6 @@ importers:
       '@aws-sdk/lib-dynamodb':
         specifier: ^3.693.0
         version: 3.716.0(@aws-sdk/client-dynamodb@3.716.0)
-      aws-jwt-verify:
-        specifier: ^4.0.1
-        version: 4.0.1
       axios:
         specifier: ^1.7.7
         version: 1.7.9
@@ -972,10 +969,6 @@ packages:
   available-typed-arrays@1.0.7:
     resolution: {integrity: sha512-wvUjBtSGN7+7SjNpq/9M2Tg350UZD3q62IFZLbRAR1bSMlCo1ZaeW+BJ+D090e4hIIZLBcTDWe4Mh4jvUDajzQ==}
     engines: {node: '>= 0.4'}
-
-  aws-jwt-verify@4.0.1:
-    resolution: {integrity: sha512-kzvi71eD3w/mCpYRUY7cz6DX4bfYihGdI2yV3FYQ2JuZZenqAqDPz0gWj0ew6vlAtdEVBNb7p+Dm2TAIxpVYMA==}
-    engines: {node: '>=14.0.0'}
 
   axios-proxy-builder@0.1.2:
     resolution: {integrity: sha512-6uBVsBZzkB3tCC8iyx59mCjQckhB8+GQrI9Cop8eC7ybIsvs/KtnNgEBfRMSEa7GqK2VBGUzgjNYMdPIfotyPA==}
@@ -3751,8 +3744,6 @@ snapshots:
   available-typed-arrays@1.0.7:
     dependencies:
       possible-typed-array-names: 1.0.0
-
-  aws-jwt-verify@4.0.1: {}
 
   axios-proxy-builder@0.1.2:
     dependencies:

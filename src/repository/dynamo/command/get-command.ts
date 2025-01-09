@@ -1,6 +1,6 @@
-import { GetCommandInput } from "@aws-sdk/lib-dynamodb";
-import { CustomGetCommandInput } from "../dynamo.types";
-import { extractExpAttributeNamesFromString } from "../utils";
+import { GetCommandInput } from '@aws-sdk/lib-dynamodb';
+import { CustomGetCommandInput } from '../dynamo.types';
+import { extractExpAttributeNamesFromString, replaceReservedKeywordsFromProjection } from '../utils';
 
 /**
  * Constructs a `GetCommandInput` object for DynamoDB based on the provided custom input.
@@ -15,7 +15,7 @@ import { extractExpAttributeNamesFromString } from "../utils";
  *   consistentRead: true, // Use strongly consistent reads
  *   returnConsumedCapacity: "TOTAL", // Return the consumed capacity
  * };
- * 
+ *
  * const commandInput = buildGetCommandInput(input);
  * // Function extracts attribute names dynamically from the projectionExpression:
  * // Returns:
@@ -27,7 +27,7 @@ import { extractExpAttributeNamesFromString } from "../utils";
  * //   ReturnConsumedCapacity: "TOTAL",
  * //   ExpressionAttributeNames: { "#name": "name", "#age": "age" }, // Extracted automatically
  * // }
- * 
+ *
  * // Example: User provides no expressionAttributeNames and no projectionExpression
  * const inputWithoutProjection: CustomGetCommandInput = {
  *   tableName: "UsersTable",
@@ -35,7 +35,7 @@ import { extractExpAttributeNamesFromString } from "../utils";
  *   consistentRead: true,
  *   returnConsumedCapacity: "TOTAL",
  * };
- * 
+ *
  * const commandInputWithoutProjection = buildGetCommandInput(inputWithoutProjection);
  * // Returns:
  * // {
@@ -50,11 +50,16 @@ export function buildGetCommandInput(input: CustomGetCommandInput): GetCommandIn
   const {
     tableName: TableName, // The name of the DynamoDB table
     key: Key, // The key of the item to retrieve
-    projectionExpression: ProjectionExpression, // Optional: Specifies attributes to retrieve
+    projectionExpression, // Optional: Specifies attributes to retrieve
     expressionAttributeNames: extraExpressionAttributesNames, // Additional expression attribute names
     consistentRead: ConsistentRead, // Optional: Specifies whether to use strongly consistent reads
     returnConsumedCapacity: ReturnConsumedCapacity, // Optional: Determines whether to return consumed capacity
   } = input;
+
+  // Generate ProjectionExpression and merge reserved keyword replacements
+  const ProjectionExpression = projectionExpression
+    ? replaceReservedKeywordsFromProjection(projectionExpression)
+    : undefined;
 
   // Build the initial GetCommandInput object
   const commandInput: GetCommandInput = {
