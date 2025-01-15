@@ -8,7 +8,7 @@ import {
   createExampleItem as createExampleItemRepo,
   updateExampleItem as updateExampleItemRepo,
 } from '@/repository/example-repository';
-import { QueryRequest } from '@/repository/dynamo';
+import { QueryRequest } from '@/dynamo';
 import CustomError from '@/error/custom-error';
 
 export async function getExampleTableDescription(): Promise<APIResponse> {

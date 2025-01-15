@@ -1,5 +1,5 @@
 import type { AWS } from '@serverless/typescript';
-import { testFunc } from '@/functions/hello';
+import { testFunc } from '@/functions/test';
 import {
   getExampleTableDesc,
   getExampleItemById,

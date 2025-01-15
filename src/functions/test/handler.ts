@@ -3,8 +3,8 @@ import type { APIGatewayProxyResultV2 as ApiFuncRes } from 'aws-lambda';
 
 import { formatApiResponse } from '@/libs/format';
 import { middyfy } from '@/libs/middyfy';
-import { handleApiFuncError } from '@/libs/error';
-import logger from '@/libs/winston';
+import { logger } from '@/libs';
+import { handleApiFuncError } from '@/error';
 
 const testFunction: ApiFunc<object> = async (event): Promise<ApiFuncRes> => {
   try {

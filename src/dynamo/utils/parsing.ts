@@ -9,7 +9,7 @@
  * parsePartitionKeyValue('true', 'BOOL'); // Returns true as a boolean
  * parsePartitionKeyValue('{"key": "value"}', 'M'); // Returns { key: "value" } as an object
  */
-export function parseDynamoKeyValue(key: string, keyType: string): any {
+export function parseDynamoKeyValue(key: string, keyType: string): unknown {
   switch (keyType) {
     case 'S': // String
       return key;

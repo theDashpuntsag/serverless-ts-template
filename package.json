@@ -5,12 +5,12 @@
   "main": "serverless.ts",
   "private": true,
   "scripts": {
-    "start": "nodemon --exec serverless offline",
     "offline": "serverless offline start --reloadHandler",
     "format": "prettier --write \"src/**/*.ts\"",
     "format:check": "prettier --check \"src/**/*.ts\"",
     "prod-d": "sls deploy --stage prod",
-    "dev-d": "sls deploy --stage dev"
+    "dev-d": "sls deploy --stage dev",
+    "lint": "eslint \"src/**/*.ts\""
   },
   "repository": {
     "type": "git",
@@ -32,6 +32,7 @@
     "@aws-sdk/client-lambda": "^3.693.0",
     "@aws-sdk/client-ssm": "^3.693.0",
     "@aws-sdk/lib-dynamodb": "^3.693.0",
+    "aws-lambda": "^1.0.7",
     "axios": "^1.7.7",
     "winston": "^3.17.0",
     "zod": "^3.24.1"
@@ -42,25 +43,14 @@
     "@middy/http-json-body-parser": "^4.1.0",
     "@serverless/eslint-config": "^5.1.0",
     "@serverless/typescript": "^3.38.0",
-    "@types/aws-lambda": "^8.10.145",
-    "@types/node": "^22.9.0",
-    "@typescript-eslint/eslint-plugin": "^8.15.0",
-    "eslint": "^9.15.0",
-    "eslint-config-prettier": "^9.1.0",
-    "eslint-plugin-import": "^2.31.0",
-    "eslint-plugin-prettier": "^5.2.1",
-    "nodemon": "^3.1.7",
-    "prettier": "^3.3.3",
+    "@types/aws-lambda": "^8.10.147",
+    "@types/node": "^22.10.6",
+    "eslint": "^9.18.0",
+    "globals": "^15.14.0",
+    "prettier": "^3.4.2",
     "serverless": "^4.4.10",
     "serverless-offline": "^14.3.4",
     "serverless-prune-plugin": "^2.1.0",
-    "ts-node": "^10.9.2",
-    "tsconfig-paths": "^4.2.0",
-    "typescript": "^5.6.3",
-    "typescript-eslint": "^8.15.0"
-  },
-  "eslintConfig": {
-    "extends": "@serverless/eslint-config/node",
-    "root": true
+    "typescript-eslint": "^8.20.0"
   }
 }

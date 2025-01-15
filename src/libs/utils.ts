@@ -16,10 +16,6 @@ export const authenticatedApiFunctionConfig = {
       Ref: 'CognitoAuthorizer',
     },
   },
-  throttling: {
-    maxRequestsPerSecond: 10000,
-    maxConcurrentRequests: 5000,
-  },
   cors: {
     origin: '*',
     headers: ['Content-Type', 'X-Amz-Date', 'Authorization', 'X-Api-Key', 'X-Amz-Security-Token', 'X-Amz-User-Agent'],

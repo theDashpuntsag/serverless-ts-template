@@ -6,3 +6,8 @@ export const LbdFuncResponseSchema = z.object({
 });
 
 export type LbdFuncResponse = z.infer<typeof LbdFuncResponseSchema>;
+
+export type GenericFuncResponse<T> = {
+  statusCode: number;
+  body: T;
+};

@@ -1,5 +1,5 @@
+import { logger } from '@/libs';
 import { GetParameterCommand, ParameterType, PutParameterCommand, SSMClient } from '@aws-sdk/client-ssm';
-import logger from '@libs/winston';
 
 const client = new SSMClient({ region: 'ap-southeast-1' });
 

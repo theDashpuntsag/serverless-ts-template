@@ -1,5 +1,5 @@
+import { logger } from '@/libs';
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
-import logger from '@libs/winston';
 
 export type CustomHeader = { Authorization: string; 'Content-Type': string };
 

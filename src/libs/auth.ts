@@ -1,6 +1,7 @@
-import logger from '@libs/winston';
-import { QueryParams, RequestMetadata } from '@type/util.types';
-import { APIGatewayProxyEvent } from 'aws-lambda';
+import type { APIGatewayProxyEvent } from 'aws-lambda';
+import type { QueryParams, RequestMetadata } from '@/types';
+
+import { logger } from '@/libs';
 
 interface ExtendedAPIGatewayProxyEvent extends Omit<APIGatewayProxyEvent, 'body'> {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

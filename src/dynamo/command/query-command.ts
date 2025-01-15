@@ -1,6 +1,11 @@
-import { QueryCommandInput } from "@aws-sdk/lib-dynamodb";
-import { CustomQueryCommandInput } from "../dynamo.types";
-import { extractExpAttributeNamesFromString, generateKeyConditionExpression, parseDynamoKeyValue, replaceReservedKeywordsFromProjection } from "../utils";
+import { QueryCommandInput } from '@aws-sdk/lib-dynamodb';
+import { CustomQueryCommandInput } from '../dynamo.types';
+import {
+  extractExpAttributeNamesFromString,
+  generateKeyConditionExpression,
+  parseDynamoKeyValue,
+  replaceReservedKeywordsFromProjection,
+} from '../utils';
 
 /**
  * Constructs a `QueryCommandInput` object for DynamoDB queries.
@@ -128,10 +133,10 @@ export function buildQueryCommandInput(input: CustomQueryCommandInput): QueryCom
       pKeyType,
       pKeyProp,
       sKey,
-      sKeyType = "S",
+      sKeyType = 'S',
       sKeyProp,
       skValue2,
-      skValue2Type = "S",
+      skValue2Type = 'S',
       skComparator,
       limit,
       lastEvaluatedKey,
@@ -146,25 +151,24 @@ export function buildQueryCommandInput(input: CustomQueryCommandInput): QueryCom
   // Generate KeyConditionExpression
   const KeyConditionExpression = generateKeyConditionExpression(sKey, skValue2, skComparator);
 
-// Generate ProjectionExpression and merge reserved keyword replacements
+  // Generate ProjectionExpression and merge reserved keyword replacements
   const ProjectionExpression = projectionExpression
     ? replaceReservedKeywordsFromProjection(projectionExpression)
     : undefined;
 
-
   // Combine all ExpressionAttributeNames
   const ExpressionAttributeNames: Record<string, string> = {
-    "#pk": pKeyProp,
-    ...(sKeyProp && { "#sk": sKeyProp }),
+    '#pk': pKeyProp,
+    ...(sKeyProp && { '#sk': sKeyProp }),
     ...(ProjectionExpression && extractExpAttributeNamesFromString(ProjectionExpression)),
     ...(extraExpAttributeNames || {}),
   };
 
   // Combine all ExpressionAttributeValues
-  const ExpressionAttributeValues: Record<string, any> = {
-    ":pk": parseDynamoKeyValue(pKey, pKeyType),
-    ...(sKey && { ":sk": parseDynamoKeyValue(sKey, sKeyType) }),
-    ...(skValue2 && { ":skValue2": parseDynamoKeyValue(skValue2, skValue2Type) }),
+  const ExpressionAttributeValues: Record<string, unknown> = {
+    ':pk': parseDynamoKeyValue(pKey, pKeyType),
+    ...(sKey && { ':sk': parseDynamoKeyValue(sKey, sKeyType) }),
+    ...(skValue2 && { ':skValue2': parseDynamoKeyValue(skValue2, skValue2Type) }),
     ...(extraExpAttributeValues || {}),
   };
 
@@ -173,12 +177,8 @@ export function buildQueryCommandInput(input: CustomQueryCommandInput): QueryCom
     TableName,
     IndexName,
     KeyConditionExpression,
-    ExpressionAttributeNames: Object.keys(ExpressionAttributeNames).length
-      ? ExpressionAttributeNames
-      : undefined,
-    ExpressionAttributeValues: Object.keys(ExpressionAttributeValues).length
-      ? ExpressionAttributeValues
-      : undefined,
+    ExpressionAttributeNames: Object.keys(ExpressionAttributeNames).length ? ExpressionAttributeNames : undefined,
+    ExpressionAttributeValues: Object.keys(ExpressionAttributeValues).length ? ExpressionAttributeValues : undefined,
     ProjectionExpression,
     ScanIndexForward: scanIdxForward,
     FilterExpression: filterExpression,

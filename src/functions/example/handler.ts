@@ -7,10 +7,11 @@ import {
   getExampleItemsByQuery as getExampleItemsByQueryService,
   createExampleItem,
 } from '@/services/example';
-import { handleApiFuncError, middyfy } from '@/libs';
-import { QueryRequestSchema } from '@/repository/dynamo/dynamo.types';
-import { extractMetadata } from '@/services/utils/cognito-auth-service';
+import { middyfy } from '@/libs';
+import { QueryRequestSchema } from '@/dynamo/dynamo.types';
+import { extractMetadata } from '@/libs/auth';
 import CustomError from '@/error/custom-error';
+import { handleApiFuncError } from '@/error';
 
 const getExampleTableDescFunc: ApiFunc<null> = async (): Promise<ApiFuncRes> => {
   try {

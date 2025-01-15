@@ -1,18 +1,18 @@
 import type { APIGatewayProxyResultV2 } from 'aws-lambda';
 import type { LbdFuncResponse } from '@/types/util.types';
 
-import { formatApiResponse as formatJSONApiRes, formatResponse } from './format';
-import { ZodError } from 'zod';
 import axios, { AxiosError } from 'axios';
-import logger from './winston';
 import CustomError from '@/error/custom-error';
+import { logger } from '@/libs/winston';
+import { ZodError } from 'zod';
+import { formatApiResponse, formatResponse } from '@/libs';
 
 function handleApiFuncError(error: unknown): APIGatewayProxyResultV2 {
   if (error instanceof Error) logger.error(`${error.message}`);
   if (axios.isAxiosError(error)) return handleAxiosApiError(error);
-  if (error instanceof CustomError) return formatJSONApiRes({ error: { message: error.message } }, error.statusCode);
+  if (error instanceof CustomError) return formatApiResponse({ error: { message: error.message } }, error.statusCode);
   if (error instanceof ZodError) return handleZodError(error);
-  return formatJSONApiRes({ error: { message: 'Unexpected error occurred' } }, 500);
+  return formatApiResponse({ error: { message: 'Unexpected error occurred' } }, 500);
 }
 
 function handleDefaultError(error: unknown): LbdFuncResponse {
@@ -26,7 +26,7 @@ function handleDefaultError(error: unknown): LbdFuncResponse {
 function handleZodError(error: ZodError): APIGatewayProxyResultV2 {
   const missingFields = error.errors.map((err) => err.path.join('.') || 'unknown field');
   const formattedMessage = `Missing or invalid fields: ${missingFields.join(', ')}`;
-  return formatJSONApiRes({ error: { message: formattedMessage } }, 400);
+  return formatApiResponse({ error: { message: formattedMessage } }, 400);
 }
 
 function handleZodFuncError(error: ZodError): LbdFuncResponse {
@@ -39,7 +39,7 @@ function handleAxiosApiError(error: AxiosError): APIGatewayProxyResultV2 {
   logger.error('Axios error in API function:', error);
   const status = error.response?.status || 500;
   const errorData = error.response?.data || { message: 'Unknown API error' };
-  return formatJSONApiRes({ error: errorData }, status);
+  return formatApiResponse({ error: errorData }, status);
 }
 
 const handleAxiosFuncError = (error: AxiosError): LbdFuncResponse => {

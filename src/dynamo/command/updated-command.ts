@@ -1,6 +1,6 @@
 import { UpdateCommandInput } from '@aws-sdk/lib-dynamodb';
-import { CustomUpdateItemInput } from '@/repository/dynamo';
 import { extractExpAttributeNamesFromUpdate, replaceReservedKeywordsFromUpdateExp } from '../utils';
+import { CustomUpdateItemInput } from '../dynamo.types';
 
 export function buildUpdateCommandInput<T>(input: CustomUpdateItemInput<T>): UpdateCommandInput {
   const {
@@ -11,14 +11,14 @@ export function buildUpdateCommandInput<T>(input: CustomUpdateItemInput<T>): Upd
     conditionExpression: ConditionExpression,
     expressionAttributeNames,
     expressionAttributeValues,
-    extraExpAttributeNames = {},
+    extraExpAttributeNames,
     extraExpressionAttributeValues = {},
     returnValues: ReturnValues = 'NONE',
     returnConsumedCapacity: ReturnConsumedCapacity,
     returnItemCollectionMetrics: ReturnItemCollectionMetrics,
   } = input;
 
-  const mergedNames = { ...expressionAttributeNames, ...extraExpAttributeNames };
+  const mergedNames: Record<string, string> = { ...expressionAttributeNames, ...extraExpAttributeNames };
   const mergedValues = { ...expressionAttributeValues, ...extraExpressionAttributeValues };
 
   if (updateExpression) {
@@ -37,7 +37,7 @@ export function buildUpdateCommandInput<T>(input: CustomUpdateItemInput<T>): Upd
 
   // Dynamically generate UpdateExpression
   const updateExpParts: string[] = [];
-  const dynamicValues: Record<string, any> = {};
+  const dynamicValues: Record<string, unknown> = {};
 
   for (const [field, value] of Object.entries(item)) {
     const attributeKey = `:${field}`;

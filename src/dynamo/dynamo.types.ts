@@ -116,8 +116,8 @@ export type CustomPutCommandInput<T> = {
   tableName: string;
   item: T;
   conditionExpression?: string;
-  expressionAttributeNames?: Record<string, any>;
-  expressionAttributeValues?: Record<string, any>;
+  expressionAttributeNames?: Record<string, string>;
+  expressionAttributeValues?: Record<string, unknown>;
   returnValues?: ReturnValue;
   returnConsumedCapacity?: ReturnConsumedCapacity;
   returnItemCollectionMetrics?: ReturnItemCollectionMetrics;
@@ -143,14 +143,14 @@ export const CustomUpdateItemInputSchema = <T extends z.ZodTypeAny>(itemSchema: 
 
 export type CustomUpdateItemInput<T> = {
   tableName: string;
-  key: Record<string, any>;
+  key: Record<string, unknown>;
   item: Partial<T>;
   updateExpression?: string;
   conditionExpression?: string;
   expressionAttributeNames?: Record<string, string>;
-  expressionAttributeValues?: Record<string, any>;
-  extraExpAttributeNames?: Record<string, any>;
-  extraExpressionAttributeValues?: Record<string, any>;
+  expressionAttributeValues?: Record<string, unknown>;
+  extraExpAttributeNames?: Record<string, string>;
+  extraExpressionAttributeValues?: Record<string, unknown>;
   returnValues?: ReturnValue;
   returnConsumedCapacity?: ReturnConsumedCapacity;
   returnItemCollectionMetrics?: ReturnItemCollectionMetrics;

@@ -11,8 +11,8 @@ import { DescribeTableCommand, DynamoDBClient } from '@aws-sdk/client-dynamodb';
 import { GetCommand, UpdateCommand, PutCommand, QueryCommand } from '@aws-sdk/lib-dynamodb';
 import { DynamoDBDocumentClient } from '@aws-sdk/lib-dynamodb';
 
-import CustomError from '@/error/custom-error';
-import logger from '@/libs/winston';
+import { logger } from '@/libs';
+import { CustomError } from '@/error';
 import * as build from './command';
 
 // Initialize DynamoDB client

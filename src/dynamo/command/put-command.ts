@@ -87,7 +87,7 @@ export function buildPutCommandInput<T>(input: CustomPutCommandInput<T>): PutCom
     returnItemCollectionMetrics: ReturnItemCollectionMetrics,
   } = input;
 
-  const Item = item as Record<string, any>;
+  const Item = item as Record<string, unknown>;
 
   const commandInput: PutCommandInput = {
     TableName,

@@ -1,6 +1,6 @@
+import type { GenericFuncResponse } from '@/types';
+import { logger } from '@/libs';
 import { InvocationType, InvokeCommand, InvokeCommandOutput, LambdaClient } from '@aws-sdk/client-lambda';
-import logger from '@libs/winston';
-import { LbdFuncResponse } from '@type/util.types';
 
 const lambdaClient = new LambdaClient({ region: 'ap-southeast-1' });
 
@@ -31,7 +31,11 @@ const lambdaClient = new LambdaClient({ region: 'ap-southeast-1' });
  * This function uses the AWS SDK for JavaScript v3's LambdaClient to send the invocation command.
  * Ensure that the Lambda function exists, the AWS region is set correctly, and the required IAM permissions are in place.
  */
-async function invokeLambdaFunc(fnName: string, payload: object, invokeType: InvocationType): Promise<LbdFuncResponse> {
+async function invokeLambdaFunc<T>(
+  fnName: string,
+  payload: object,
+  invokeType: InvocationType
+): Promise<GenericFuncResponse<T>> {
   try {
     const response: InvokeCommandOutput = await lambdaClient.send(
       new InvokeCommand({
@@ -41,7 +45,7 @@ async function invokeLambdaFunc(fnName: string, payload: object, invokeType: Inv
       })
     );
     const resPayload = JSON.parse(new TextDecoder('utf-8').decode(response.Payload));
-    return { statusCode: resPayload.statusCode, body: JSON.parse(resPayload.body) };
+    return { statusCode: resPayload.statusCode, body: JSON.parse(resPayload.body) as T };
   } catch (error: unknown) {
     logger.error(`Error occurred on invokeLambdaFunc ${fnName} `);
     throw error;
