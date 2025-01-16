@@ -1,7 +1,7 @@
 {
   "name": "serverless-ts-template",
-  "version": "A serverless framework template for typescript",
-  "description": "",
+  "version": "0.0.0",
+  "description": "A serverless framework template for typescript",
   "main": "serverless.ts",
   "private": true,
   "scripts": {
