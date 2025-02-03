@@ -1,6 +1,7 @@
-import type { GenericFuncResponse } from '@/types';
-import { logger } from '@/libs';
-import { InvocationType, InvokeCommand, InvokeCommandOutput, LambdaClient } from '@aws-sdk/client-lambda';
+import type { GenericFuncResponse, LbdFuncResponse } from '@/types';
+
+import { InvocationType, InvokeCommand, LambdaClient } from '@aws-sdk/client-lambda';
+import { logger } from './winston';
 
 const lambdaClient = new LambdaClient({ region: 'ap-southeast-1' });
 
@@ -31,25 +32,27 @@ const lambdaClient = new LambdaClient({ region: 'ap-southeast-1' });
  * This function uses the AWS SDK for JavaScript v3's LambdaClient to send the invocation command.
  * Ensure that the Lambda function exists, the AWS region is set correctly, and the required IAM permissions are in place.
  */
-async function invokeLambdaFunc<T>(
+export async function invokeLambdaFunc<T>(
   fnName: string,
   payload: object,
-  invokeType: InvocationType
+  invokeType: InvocationType = 'RequestResponse'
 ): Promise<GenericFuncResponse<T>> {
   try {
-    const response: InvokeCommandOutput = await lambdaClient.send(
+    const response = await lambdaClient.send(
       new InvokeCommand({
         FunctionName: fnName,
         Payload: JSON.stringify({ ...payload }),
         InvocationType: invokeType ? invokeType : 'RequestResponse',
       })
     );
-    const resPayload = JSON.parse(new TextDecoder('utf-8').decode(response.Payload));
-    return { statusCode: resPayload.statusCode, body: JSON.parse(resPayload.body) as T };
+    const resPayload = JSON.parse(new TextDecoder('utf-8').decode(response.Payload)) as LbdFuncResponse;
+    if (!resPayload) {
+      logger.error(`Failed to execute lambda function ${fnName}! No response from lambda function`);
+      throw new Error(`Failed to execute lambda function ${fnName}! No response from lambda function`);
+    }
+    return { statusCode: resPayload.statusCode || 400, body: JSON.parse(resPayload.body) as T };
   } catch (error: unknown) {
-    logger.error(`Error occurred on invokeLambdaFunc ${fnName} `);
+    logger.error(`Error occurred on invokeLambdaFunc ${fnName}  ${JSON.stringify(error)}`);
     throw error;
   }
 }
-
-export { invokeLambdaFunc };
