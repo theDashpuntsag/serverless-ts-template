@@ -1,7 +1,7 @@
 import type { CustomAPIGatewayEvent as ApiFunc } from '@/libs/api-gateway';
 import type { APIGatewayProxyResultV2 as ApiFuncRes } from 'aws-lambda';
 
-import { formatApiResponse } from '@/libs/format';
+import { formatApiResponse } from '@/libs/response-format';
 import { middyfy } from '@/libs/middyfy';
 import { logger } from '@/libs';
 import { handleApiFuncError } from '@/error';

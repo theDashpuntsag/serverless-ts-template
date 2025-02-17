@@ -10,7 +10,7 @@ export function extractQueryParamsFromEvent(event: EventType, indexName: string,
 
   if (parsedQueries && parsedQueries.index === indexName) {
     parsedQueries = {
-      indexName,
+      index: indexName,
       pKey: parsedQueries.pKey || query.pKey,
       pKeyType: parsedQueries.pKeyType || query.pKeyType,
       pKeyProp: parsedQueries.pKeyProps || query.pKeyProp,
@@ -19,10 +19,9 @@ export function extractQueryParamsFromEvent(event: EventType, indexName: string,
 
   const parseResult = QueryRequestSchema.safeParse({
     indexName: parsedQueries.index,
-    ...parsedQueries,
     limit: parsedQueries.limit || '10',
+    ...parsedQueries,
   });
-
   if (!parseResult.success) {
     throw new CustomError(`Bad request!,${parseResult.error.errors.map((err) => err.path).join(', ')}`, 400);
   }
