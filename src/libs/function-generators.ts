@@ -1,4 +1,4 @@
-import { authenticatedApiFunctionConfig, defaultApiFunctionConfig, generatePathname } from './utils';
+import { authenticatedApiFunctionConfig, defaultApiFunctionConfig, generatePathname } from './function-configs';
 
 export function createDefaultFunction(dirname: string, handlerName: string, other: object = {}) {
   return {

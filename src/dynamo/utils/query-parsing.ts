@@ -18,7 +18,6 @@ export function extractQueryParamsFromEvent(event: EventType, indexName: string,
   }
 
   const parseResult = QueryRequestSchema.safeParse({
-    indexName: parsedQueries.index,
     ...parsedQueries,
     limit: parsedQueries.limit || '10',
   });

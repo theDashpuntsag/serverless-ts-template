@@ -1,6 +1,6 @@
 import type { APIGatewayProxyResultV2 as APIResponse } from 'aws-lambda';
 
-import { formatApiResponse } from '@/libs/format';
+import { formatApiResponse } from '@/libs/response-format';
 import {
   getExampleTableDescription as getExampleTableDesc,
   getExampleItemById as getExampleItemByIdRepo,
