@@ -76,7 +76,7 @@ export function extractQueryParamsFromEvent(event: EventType, query: QueryReques
   // Case 3: Any other query parameters provided
   // Build the result from queryParams only, with a default limit and optional fields as specified
   const params = {
-    indexName: queryParams.index || query.indexName, // Fallback to query.indexName if index is missing
+    indexName: queryParams.index, // Fallback to query.indexName if index is missing
     pKey: queryParams.pKey, // No default fallback; schema will enforce requirement
     pKeyType: queryParams.pKeyType,
     pKeyProp: queryParams.pKeyProp,
