@@ -94,7 +94,7 @@ export const CustomQueryCommandOutputSchema = <T extends z.ZodTypeAny>(itemSchem
   });
 
 export type CustomQueryCommandOutput<T> = {
-  lastEvaluatedKey: string | undefined;
+  lastEvaluatedKey: Record<string, unknown> | undefined;
   items: T[];
 };
 

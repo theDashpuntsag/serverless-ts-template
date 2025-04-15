@@ -41,7 +41,7 @@ export async function queryRecords<T>(input: CustomQueryCommandInput): Promise<C
   try {
     const result = await docClient.send(new QueryCommand(build.buildQueryCommandInput(input)));
     return {
-      lastEvaluatedKey: result.LastEvaluatedKey ? JSON.stringify(result.LastEvaluatedKey) : '',
+      lastEvaluatedKey: result.LastEvaluatedKey ? (result.LastEvaluatedKey as Record<string, unknown>) : {},
       items: result.Items ? (result.Items as T[]) : [],
     };
   } catch (error: unknown) {
