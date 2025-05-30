@@ -1,5 +1,7 @@
 {
   "compilerOptions": {
+    "rootDir": "./",
+    "outDir": "dist",
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"]
@@ -17,8 +19,6 @@
     "preserveConstEnums": true,
     "resolveJsonModule": true,
     "allowJs": true,
-    "rootDir": ".",
-    "outDir": "lib",
     "esModuleInterop": true,
     "skipLibCheck": true
   },

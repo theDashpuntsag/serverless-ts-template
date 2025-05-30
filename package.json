@@ -6,11 +6,13 @@
   "private": true,
   "scripts": {
     "offline": "serverless offline start --reloadHandler",
+    "build": "npx tsc",
+    "lint": "eslint",
     "format": "prettier --write \"src/**/*.ts\"",
     "format:check": "prettier --check \"src/**/*.ts\"",
-    "prod-d": "sls deploy --stage prod",
-    "dev-d": "sls deploy --stage dev",
-    "lint": "eslint \"src/**/*.ts\""
+    "deploy:prod": "sls deploy --stage prod",
+    "deploy:dev": "sls deploy --stage dev",
+    "prepare": "husky"
   },
   "repository": {
     "type": "git",
@@ -25,7 +27,7 @@
   "bugs": {
     "url": "https://github.com/theDashpuntsag/serverless-ts-template/issues"
   },
-  "packageManager": "pnpm@9.15.0",
+  "packageManager": "pnpm@10.11.0",
   "homepage": "https://github.com/theDashpuntsag/serverless-ts-template#readme",
   "dependencies": {
     "@aws-sdk/client-dynamodb": "^3.749.0",
@@ -45,12 +47,14 @@
     "@serverless/typescript": "^3.38.0",
     "@types/aws-lambda": "^8.10.147",
     "@types/node": "^22.13.4",
-    "eslint": "^9.20.1",
+    "eslint": "^9.27.0",
     "globals": "^15.15.0",
+    "husky": "^9.1.7",
     "prettier": "^3.5.1",
     "serverless": "^4.6.2",
     "serverless-offline": "^14.4.0",
     "serverless-prune-plugin": "^2.1.0",
-    "typescript-eslint": "^8.24.0"
+    "typescript-eslint": "^8.24.0",
+    "vitest": "^3.1.4"
   }
 }

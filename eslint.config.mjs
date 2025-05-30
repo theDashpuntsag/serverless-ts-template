@@ -1,12 +1,18 @@
+import js from '@eslint/js';
 import globals from 'globals';
-import pluginJs from '@eslint/js';
 import tseslint from 'typescript-eslint';
+import { defineConfig, globalIgnores } from 'eslint/config';
 
-/** @type {import('eslint').Linter.Config[]} */
-export default [
-  { rules: { 'no-unused-vars': 'warn' } },
-  { files: ['**/*.{js,mjs,cjs,ts}'] },
-  { languageOptions: { globals: globals.browser } },
-  pluginJs.configs.recommended,
-  ...tseslint.configs.recommended,
-];
+export default defineConfig([
+  tseslint.configs.recommended,
+  { files: ['**/*.{js,mjs,cjs,ts,mts,cts}'], plugins: { js }, extends: ['js/recommended'] },
+  { files: ['**/*.{js,mjs,cjs,ts,mts,cts}'], languageOptions: { globals: globals.browser } },
+  {
+    rules: {
+      '@typescript-eslint/no-unused-vars': 'warn',
+      'no-unused-vars': 'warn',
+      'no-undef': 'warn',
+    },
+  },
+  globalIgnores(['./dist/**/*', './.serverless/**/*', './turbo/**/*', './node_modules/**/*']),
+]);

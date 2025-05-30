@@ -1,0 +1,4 @@
+pnpm run format 
+git add .
+pnpm run lint
+pnpm run build
