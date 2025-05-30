@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 import { createDefaultApiFunction } from '@/libs';
 
 export const getExampleTableDesc = createDefaultApiFunction(

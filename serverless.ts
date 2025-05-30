@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 import type { AWS } from '@serverless/typescript';
 import { testFunc } from '@/functions/test';
 import {

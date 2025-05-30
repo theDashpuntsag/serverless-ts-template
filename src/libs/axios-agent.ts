@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 import { logger } from '@/libs';
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
 
