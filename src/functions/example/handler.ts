@@ -8,10 +8,9 @@ import {
   createExampleItem,
 } from '@/services/example';
 import { middyfy } from '@/libs';
-import { QueryRequestSchema } from '@/dynamo/dynamo.types';
+import { QueryRequestSchema } from '@/dynamo';
 import { extractMetadata } from '@/libs/auth';
-import CustomError from '@/error/custom-error';
-import { handleApiFuncError } from '@/error';
+import { CustomError, handleApiFuncError } from '@/error';
 
 const getExampleTableDescFunc: ApiFunc<null> = async (): Promise<ApiFuncRes> => {
   try {

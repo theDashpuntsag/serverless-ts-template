@@ -1,59 +1,8 @@
 /* eslint-disable no-undef */
 import type { ReturnConsumedCapacity, ReturnItemCollectionMetrics, ReturnValue } from '@aws-sdk/client-dynamodb';
-import { z } from 'zod';
+import { QueryRequestSchema } from './query.types';
+import { Primitive, z } from 'zod';
 
-// ------------------------------------ Custom types --------------------------------------------------
-export const QueryRequestSchema = z
-  .object({
-    pKey: z.string(),
-    pKeyType: z.string(),
-    pKeyProp: z.string(),
-    sKey: z.string().optional(),
-    sKeyType: z.string().optional(),
-    sKeyProp: z.string().optional(),
-    skValue2: z.string().optional(),
-    skValue2Type: z.string().optional(),
-    skComparator: z.string().optional(),
-    indexName: z.string().optional(),
-    limit: z.string().optional(),
-    lastEvaluatedKey: z.string().optional(),
-    sorting: z.string().optional(),
-  })
-  .superRefine((data, ctx) => {
-    if (data.skComparator) {
-      if (!data.sKey) {
-        ctx.addIssue({
-          path: ['sKey'],
-          message: 'sKey is required when skComparator is present',
-          code: 'invalid_type',
-          expected: 'string',
-          received: typeof data.sKey,
-        });
-      }
-      if (!data.sKeyProp) {
-        ctx.addIssue({
-          path: ['sKeyProp'],
-          message: 'sKeyProp is required when skComparator is present',
-          code: 'invalid_type',
-          expected: 'string',
-          received: typeof data.sKeyProp,
-        });
-      }
-      if (!data.sKeyType) {
-        ctx.addIssue({
-          path: ['sKeyType'],
-          message: 'sKeyType is required when skComparator is present',
-          code: 'invalid_type',
-          expected: 'string',
-          received: typeof data.sKeyType,
-        });
-      }
-    }
-  });
-
-export type QueryRequest = z.infer<typeof QueryRequestSchema>;
-
-// ------------------------------------ Input types --------------------------------------------------
 const returnConsumedCapacitySchema = z.enum(['INDEXES', 'TOTAL', 'NONE']);
 const returnItemCollectionMetricsSchema = z.enum(['SIZE', 'NONE']);
 
@@ -118,7 +67,7 @@ export type CustomPutCommandInput<T> = {
   item: T;
   conditionExpression?: string;
   expressionAttributeNames?: Record<string, string>;
-  expressionAttributeValues?: Record<string, unknown>;
+  expressionAttributeValues?: Record<string, string>;
   returnValues?: ReturnValue;
   returnConsumedCapacity?: ReturnConsumedCapacity;
   returnItemCollectionMetrics?: ReturnItemCollectionMetrics;
@@ -144,14 +93,14 @@ export const CustomUpdateItemInputSchema = <T extends z.ZodTypeAny>(itemSchema: 
 
 export type CustomUpdateItemInput<T> = {
   tableName: string;
-  key: Record<string, unknown>;
+  key: Record<string, Primitive>;
   item: Partial<T>;
   updateExpression?: string;
   conditionExpression?: string;
   expressionAttributeNames?: Record<string, string>;
-  expressionAttributeValues?: Record<string, unknown>;
+  expressionAttributeValues?: Record<string, string>;
   extraExpAttributeNames?: Record<string, string>;
-  extraExpressionAttributeValues?: Record<string, unknown>;
+  extraExpressionAttributeValues?: Record<string, string>;
   returnValues?: ReturnValue;
   returnConsumedCapacity?: ReturnConsumedCapacity;
   returnItemCollectionMetrics?: ReturnItemCollectionMetrics;

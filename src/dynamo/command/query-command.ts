@@ -1,5 +1,5 @@
 import { QueryCommandInput } from '@aws-sdk/lib-dynamodb';
-import { CustomQueryCommandInput } from '../dynamo.types';
+import { CustomQueryCommandInput } from '../types';
 import {
   extractExpAttributeNamesFromString,
   generateKeyConditionExpression,

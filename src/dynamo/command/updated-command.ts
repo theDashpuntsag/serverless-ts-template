@@ -1,6 +1,6 @@
-import { UpdateCommandInput } from '@aws-sdk/lib-dynamodb';
+import type { UpdateCommandInput } from '@aws-sdk/lib-dynamodb';
 import { extractExpAttributeNamesFromUpdate, replaceReservedKeywordsFromUpdateExp } from '../utils';
-import { CustomUpdateItemInput } from '../dynamo.types';
+import { CustomUpdateItemInput } from '../types';
 
 export function buildUpdateCommandInput<T>(input: CustomUpdateItemInput<T>): UpdateCommandInput {
   const {

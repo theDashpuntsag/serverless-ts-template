@@ -1,5 +1,6 @@
-import { GetCommandInput } from '@aws-sdk/lib-dynamodb';
-import { CustomGetCommandInput } from '../dynamo.types';
+import type { GetCommandInput } from '@aws-sdk/lib-dynamodb';
+import type { CustomGetCommandInput } from '../types';
+
 import { extractExpAttributeNamesFromString, replaceReservedKeywordsFromProjection } from '../utils';
 
 /**

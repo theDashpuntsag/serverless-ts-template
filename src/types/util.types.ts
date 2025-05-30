@@ -11,3 +11,5 @@ export type GenericFuncResponse<T> = {
   statusCode: number;
   body: T;
 };
+
+export type PrimitiveTypes = string | number | boolean | undefined | null | object;

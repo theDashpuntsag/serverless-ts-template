@@ -1,7 +1,8 @@
-import { logger, type ValidatedAPIGatewayProxyEvent } from '@/libs';
-import type { QueryRequest } from '../dynamo.types';
+import type { QueryRequest } from '../types';
+import type { ValidatedAPIGatewayProxyEvent } from '@/libs';
 
-import { QueryRequestSchema } from '../dynamo.types';
+import { QueryRequestSchema } from '../types';
+import { logger } from '@/libs';
 import { CustomError } from '@/error';
 
 type EventType = ValidatedAPIGatewayProxyEvent<object | null>;
@@ -45,8 +46,8 @@ export function extractQueryParamsFromEvent(event: EventType, query: QueryReques
 
   // Case 2: Only an index is provided and it matches query.indexName
   // Merge with defaults from `query` to provide a full set of parameters
-  const queryParamsKeys = Object.keys(queryParams);
-  if (queryParamsKeys.length === 1 && queryParams.index === query.indexName) {
+  const isPkeyExists = queryParams.pKey && queryParams.pKey?.length > 0;
+  if (!isPkeyExists && queryParams.index === query.indexName) {
     const params = {
       indexName: query.indexName,
       pKey: queryParams.pKey || query.pKey, // Use queryParams.pKey if provided, else query.pKey
