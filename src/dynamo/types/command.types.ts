@@ -1,4 +1,3 @@
-/* eslint-disable no-undef */
 import type { ReturnConsumedCapacity, ReturnItemCollectionMetrics, ReturnValue } from '@aws-sdk/client-dynamodb';
 import { QueryRequestSchema } from './query.types';
 import { Primitive, z } from 'zod';

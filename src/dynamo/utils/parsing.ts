@@ -39,7 +39,6 @@ export function parseDynamoKeyValue(key: string, keyType: string): unknown {
         .map((item) => Number(item.trim()))
         .filter((num) => !isNaN(num));
     case 'BS': // Binary Set
-      // eslint-disable-next-line no-undef
       return key.split(',').map((item) => Buffer.from(item.trim(), 'base64'));
     default:
       throw new Error(`Unsupported partitionKeyType: ${keyType}`);
