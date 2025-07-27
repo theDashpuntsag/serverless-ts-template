@@ -552,5 +552,5 @@ export const RESERVED_KEYWORDS = [
   'wrapped',
   'write',
   'year',
-  'zone',
+  'zone'
 ];

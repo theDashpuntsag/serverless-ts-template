@@ -54,7 +54,7 @@ export function buildGetCommandInput(input: CustomGetCommandInput): GetCommandIn
     projectionExpression, // Optional: Specifies attributes to retrieve
     expressionAttributeNames: extraExpressionAttributesNames, // Additional expression attribute names
     consistentRead: ConsistentRead, // Optional: Specifies whether to use strongly consistent reads
-    returnConsumedCapacity: ReturnConsumedCapacity, // Optional: Determines whether to return consumed capacity
+    returnConsumedCapacity: ReturnConsumedCapacity // Optional: Determines whether to return consumed capacity
   } = input;
 
   // Generate ProjectionExpression and merge reserved keyword replacements
@@ -68,13 +68,13 @@ export function buildGetCommandInput(input: CustomGetCommandInput): GetCommandIn
     Key,
     ProjectionExpression,
     ConsistentRead,
-    ReturnConsumedCapacity,
+    ReturnConsumedCapacity
   };
 
   // Combine extracted attribute names from the projection expression with additional ones
   const expressionAttributeNames: Record<string, string> = {
     ...(ProjectionExpression && extractExpAttributeNamesFromString(ProjectionExpression)),
-    ...extraExpressionAttributesNames,
+    ...extraExpressionAttributesNames
   };
 
   // Add ExpressionAttributeNames to the command if any are present

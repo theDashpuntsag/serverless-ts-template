@@ -42,7 +42,7 @@ export async function invokeLambdaFunc<T>(
       new InvokeCommand({
         FunctionName: fnName,
         Payload: JSON.stringify({ ...payload }),
-        InvocationType: invokeType ? invokeType : 'RequestResponse',
+        InvocationType: invokeType ? invokeType : 'RequestResponse'
       })
     );
     const resPayload = JSON.parse(new TextDecoder('utf-8').decode(response.Payload)) as LbdFuncResponse;

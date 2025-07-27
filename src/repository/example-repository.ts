@@ -13,7 +13,7 @@ export async function getExampleItemById(id: string, projectionExp?: string): Pr
   const params = {
     tableName: TABLE_NAME,
     key: { id },
-    projectionExpression: projectionExp,
+    projectionExpression: projectionExp
   };
 
   return await getRecordByKey<object>(params);

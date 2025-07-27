@@ -15,7 +15,7 @@ export function buildUpdateCommandInput<T>(input: CustomUpdateItemInput<T>): Upd
     extraExpressionAttributeValues = {},
     returnValues: ReturnValues = 'NONE',
     returnConsumedCapacity: ReturnConsumedCapacity,
-    returnItemCollectionMetrics: ReturnItemCollectionMetrics,
+    returnItemCollectionMetrics: ReturnItemCollectionMetrics
   } = input;
 
   const mergedNames: Record<string, string> = { ...expressionAttributeNames, ...extraExpAttributeNames };
@@ -31,7 +31,7 @@ export function buildUpdateCommandInput<T>(input: CustomUpdateItemInput<T>): Upd
       ExpressionAttributeValues: Object.keys(mergedValues).length ? mergedValues : undefined,
       ReturnValues,
       ReturnConsumedCapacity,
-      ReturnItemCollectionMetrics,
+      ReturnItemCollectionMetrics
     };
   }
 
@@ -54,24 +54,24 @@ export function buildUpdateCommandInput<T>(input: CustomUpdateItemInput<T>): Upd
     ConditionExpression,
     ...(Object.keys({
       ...extractExpAttributeNamesFromUpdate(UpdateExpression),
-      ...mergedNames,
+      ...mergedNames
     }).length > 0 && {
       ExpressionAttributeNames: {
         ...extractExpAttributeNamesFromUpdate(UpdateExpression),
-        ...mergedNames,
-      },
+        ...mergedNames
+      }
     }),
     ...(Object.keys({
       ...mergedValues,
-      ...dynamicValues,
+      ...dynamicValues
     }).length > 0 && {
       ExpressionAttributeValues: {
         ...mergedValues,
-        ...dynamicValues,
-      },
+        ...dynamicValues
+      }
     }),
     ReturnValues,
     ReturnConsumedCapacity,
-    ReturnItemCollectionMetrics,
+    ReturnItemCollectionMetrics
   };
 }

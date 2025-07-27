@@ -9,25 +9,25 @@ export const RequestMetadataSchema = z.object({
   ipAddress: z.string().optional(),
   headers: z.object({}).passthrough(), // Allows any object
   queryParams: QueryParamsSchema.optional(),
-  body: z.any(),
+  body: z.any()
 });
 
 export type RequestMetadata = z.infer<typeof RequestMetadataSchema>;
 
 export const CognitoIdTokenSchema = z.object({
-  sub: z.string(),
-  email_verified: z.boolean(),
-  iss: z.string(),
+  'sub': z.string(),
+  'email_verified': z.boolean(),
+  'iss': z.string(),
   'cognito:username': z.string(),
-  origin_jti: z.string(),
-  aud: z.string(),
-  event_id: z.string(),
-  token_use: z.string(),
-  auth_time: z.number(),
-  exp: z.number(),
-  iat: z.number(),
-  jti: z.string(),
-  email: z.string(),
+  'origin_jti': z.string(),
+  'aud': z.string(),
+  'event_id': z.string(),
+  'token_use': z.string(),
+  'auth_time': z.number(),
+  'exp': z.number(),
+  'iat': z.number(),
+  'jti': z.string(),
+  'email': z.string()
 });
 
 export type CognitoIdToken = z.infer<typeof CognitoIdTokenSchema>;

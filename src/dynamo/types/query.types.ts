@@ -14,7 +14,7 @@ export const QueryRequestSchema = z
     indexName: z.string().optional(),
     limit: z.string().optional(),
     lastEvaluatedKey: z.string().optional(),
-    sorting: z.string().optional(),
+    sorting: z.string().optional()
   })
   .superRefine((data, ctx) => {
     if (data.skComparator) {
@@ -24,7 +24,7 @@ export const QueryRequestSchema = z
           message: 'sKey is required when skComparator is present',
           code: 'invalid_type',
           expected: 'string',
-          received: typeof data.sKey,
+          received: typeof data.sKey
         });
       }
       if (!data.sKeyProp) {
@@ -33,7 +33,7 @@ export const QueryRequestSchema = z
           message: 'sKeyProp is required when skComparator is present',
           code: 'invalid_type',
           expected: 'string',
-          received: typeof data.sKeyProp,
+          received: typeof data.sKeyProp
         });
       }
       if (!data.sKeyType) {
@@ -42,7 +42,7 @@ export const QueryRequestSchema = z
           message: 'sKeyType is required when skComparator is present',
           code: 'invalid_type',
           expected: 'string',
-          received: typeof data.sKeyType,
+          received: typeof data.sKeyType
         });
       }
     }

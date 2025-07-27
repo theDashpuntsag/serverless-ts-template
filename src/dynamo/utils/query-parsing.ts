@@ -61,7 +61,7 @@ export function extractQueryParamsFromEvent(event: EventType, query: QueryReques
       skValue2Type: queryParams.skValue2Type || query.skValue2Type,
       skComparator: queryParams.skComparator || query.skComparator,
       lastEvaluatedKey: queryParams.lastEvaluatedKey || query.lastEvaluatedKey,
-      sorting: queryParams.sorting || query.sorting,
+      sorting: queryParams.sorting || query.sorting
     };
 
     // Validate the merged parameters against the schema
@@ -89,7 +89,7 @@ export function extractQueryParamsFromEvent(event: EventType, query: QueryReques
     ...(queryParams.skValue2Type && { skValue2Type: queryParams.skValue2Type }),
     ...(queryParams.skComparator && { skComparator: queryParams.skComparator }),
     ...(queryParams.lastEvaluatedKey && { lastEvaluatedKey: queryParams.lastEvaluatedKey }),
-    ...(queryParams.sorting && { sorting: queryParams.sorting }),
+    ...(queryParams.sorting && { sorting: queryParams.sorting })
   };
 
   // Validate the constructed parameters against the schema

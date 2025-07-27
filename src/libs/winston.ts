@@ -8,5 +8,5 @@ const customFormat = printf(({ level, message, label, timestamp }) => {
 
 export const logger = winston.createLogger({
   format: combine(label({ label: 'CUSTOM-APPLICATION' }), timestamp(), customFormat),
-  transports: [new winston.transports.Console()],
+  transports: [new winston.transports.Console()]
 });

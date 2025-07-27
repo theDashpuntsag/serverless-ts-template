@@ -4,7 +4,7 @@ import type {
   CustomPutCommandInput,
   CustomQueryCommandInput,
   CustomQueryCommandOutput,
-  CustomUpdateItemInput,
+  CustomUpdateItemInput
 } from './types';
 
 import { DescribeTableCommand, DynamoDBClient } from '@aws-sdk/client-dynamodb';
@@ -42,7 +42,7 @@ export async function queryRecords<T>(input: CustomQueryCommandInput): Promise<C
     const result = await docClient.send(new QueryCommand(build.buildQueryCommandInput(input)));
     return {
       lastEvaluatedKey: result.LastEvaluatedKey ? result.LastEvaluatedKey : {},
-      items: result.Items ? (result.Items as T[]) : [],
+      items: result.Items ? (result.Items as T[]) : []
     };
   } catch (error: unknown) {
     logger.error(`Error querying records from table "${input.tableName}": ${error}`);

@@ -11,7 +11,7 @@ export const CustomGetCommandInputSchema = z.object({
   projectionExpression: z.string().optional(),
   expressionAttributeNames: z.record(z.string(), z.any()).optional(),
   consistentRead: z.boolean().optional(),
-  returnConsumedCapacity: returnConsumedCapacitySchema.optional(),
+  returnConsumedCapacity: returnConsumedCapacitySchema.optional()
 });
 
 export type CustomGetCommandInput = z.infer<typeof CustomGetCommandInputSchema>;
@@ -31,7 +31,7 @@ export const CustomQueryCommandInputSchema = z.object({
     .optional(), // Extra substitution for attribute values (optional)
   projectionExpression: z.string().optional(), // Attributes to retrieve (optional)
   scanIdxForward: z.boolean().optional(), // Order in which to return the results (ascending if true) (optional)
-  returnConsumedCapacity: returnConsumedCapacitySchema.optional(), // Details about consumed capacity (optional)
+  returnConsumedCapacity: returnConsumedCapacitySchema.optional() // Details about consumed capacity (optional)
 });
 
 export type CustomQueryCommandInput = z.infer<typeof CustomQueryCommandInputSchema>;
@@ -39,7 +39,7 @@ export type CustomQueryCommandInput = z.infer<typeof CustomQueryCommandInputSche
 export const CustomQueryCommandOutputSchema = <T extends z.ZodTypeAny>(itemSchema: T) =>
   z.object({
     lastEvaluatedKey: z.string().optional(),
-    items: z.array(itemSchema),
+    items: z.array(itemSchema)
   });
 
 export type CustomQueryCommandOutput<T> = {
@@ -58,7 +58,7 @@ export const CustomPutCommandInputSchema = <T extends z.ZodTypeAny>(itemSchema: 
       .optional(), // A map of placeholder values to actual attribute values (optional).
     returnValues: z.enum(['NONE', 'ALL_OLD', 'UPDATED_OLD', 'ALL_NEW', 'UPDATED_NEW']).optional(), // Specifies what is returned (optional).
     returnConsumedCapacity: z.enum(['INDEXES', 'TOTAL', 'NONE']).optional(), // Specifies the level of consumed capacity details to return (optional).
-    returnItemCollectionMetrics: z.enum(['SIZE', 'NONE']).optional(), // Specifies whether item collection metrics are returned (optional).
+    returnItemCollectionMetrics: z.enum(['SIZE', 'NONE']).optional() // Specifies whether item collection metrics are returned (optional).
   });
 
 export type CustomPutCommandInput<T> = {
@@ -87,7 +87,7 @@ export const CustomUpdateItemInputSchema = <T extends z.ZodTypeAny>(itemSchema: 
     extraExpressionAttributeValKeys: z.string().optional(),
     returnValues: z.string().optional(),
     returnConsumedCapacity: returnConsumedCapacitySchema.optional(),
-    returnItemCollectionMetrics: returnItemCollectionMetricsSchema.optional(),
+    returnItemCollectionMetrics: returnItemCollectionMetricsSchema.optional()
   });
 
 export type CustomUpdateItemInput<T> = {

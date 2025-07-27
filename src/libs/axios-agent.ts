@@ -1,7 +1,7 @@
 import { logger } from '@/libs';
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
 
-export type CustomHeader = { Authorization: string; 'Content-Type': string };
+export type CustomHeader = { 'Authorization': string; 'Content-Type': string };
 
 /**
  * Creates a Bearer Authorization header object.
@@ -10,7 +10,7 @@ export type CustomHeader = { Authorization: string; 'Content-Type': string };
  * @returns An object containing the Authorization header.
  */
 function createBearerAuthHeader(token: string, contentType: string = 'application/json'): CustomHeader {
-  return { Authorization: `Bearer ${token}`, 'Content-Type': contentType };
+  return { 'Authorization': `Bearer ${token}`, 'Content-Type': contentType };
 }
 
 /**
@@ -24,8 +24,8 @@ function createBasicAuthHeader(username: string, password: string, contentType =
   const credentials = `${username}:${password}`;
   const encodedCredentials = Buffer.from(credentials).toString('base64');
   return {
-    Authorization: `Basic ${encodedCredentials}`,
-    'Content-Type': contentType,
+    'Authorization': `Basic ${encodedCredentials}`,
+    'Content-Type': contentType
   };
 }
 

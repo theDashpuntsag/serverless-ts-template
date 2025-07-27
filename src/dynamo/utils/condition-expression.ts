@@ -10,7 +10,7 @@ export function generateConditionExpression(statuses: string[]): { condition: st
   if (statuses.length === 1) {
     return {
       condition: `#status = :status0`,
-      extra: { ':status0': statuses[0] },
+      extra: { ':status0': statuses[0] }
     };
   }
 

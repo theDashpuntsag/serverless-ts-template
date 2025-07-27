@@ -4,7 +4,7 @@ import {
   extractExpAttributeNamesFromString,
   generateKeyConditionExpression,
   parseDynamoKeyValue,
-  replaceReservedKeywordsFromProjection,
+  replaceReservedKeywordsFromProjection
 } from '../utils';
 
 /**
@@ -139,13 +139,13 @@ export function buildQueryCommandInput(input: CustomQueryCommandInput): QueryCom
       skValue2Type = 'S',
       skComparator,
       limit,
-      lastEvaluatedKey,
+      lastEvaluatedKey
     },
     extraExpAttributeNames,
     extraExpAttributeValues,
     projectionExpression,
     scanIdxForward,
-    filterExpression,
+    filterExpression
   } = input;
 
   // Generate KeyConditionExpression
@@ -161,7 +161,7 @@ export function buildQueryCommandInput(input: CustomQueryCommandInput): QueryCom
     '#pk': pKeyProp,
     ...(sKeyProp && { '#sk': sKeyProp }),
     ...(ProjectionExpression && extractExpAttributeNamesFromString(ProjectionExpression)),
-    ...(extraExpAttributeNames || {}),
+    ...(extraExpAttributeNames || {})
   };
 
   // Combine all ExpressionAttributeValues
@@ -169,7 +169,7 @@ export function buildQueryCommandInput(input: CustomQueryCommandInput): QueryCom
     ':pk': parseDynamoKeyValue(pKey, pKeyType),
     ...(sKey && { ':sk': parseDynamoKeyValue(sKey, sKeyType) }),
     ...(skValue2 && { ':skValue2': parseDynamoKeyValue(skValue2, skValue2Type) }),
-    ...(extraExpAttributeValues || {}),
+    ...(extraExpAttributeValues || {})
   };
 
   // Build and return the QueryCommandInput
@@ -183,6 +183,6 @@ export function buildQueryCommandInput(input: CustomQueryCommandInput): QueryCom
     ScanIndexForward: scanIdxForward,
     FilterExpression: filterExpression,
     ExclusiveStartKey: lastEvaluatedKey ? JSON.parse(lastEvaluatedKey) : undefined,
-    Limit: limit ? Number(limit) : undefined,
+    Limit: limit ? Number(limit) : undefined
   };
 }

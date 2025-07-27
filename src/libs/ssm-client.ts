@@ -19,7 +19,7 @@ async function getParameterStoreVal(paramName: string, isDecrypt: boolean = fals
     const response = await client.send(
       new GetParameterCommand({
         Name: paramName,
-        WithDecryption: isDecrypt,
+        WithDecryption: isDecrypt
       })
     );
     return response.Parameter?.Value;
@@ -52,7 +52,7 @@ async function updateParameterStoreVal(
         Name: paramName,
         Value: paramValue,
         Type: paramType,
-        Overwrite: overwrite,
+        Overwrite: overwrite
       })
     );
   } catch (error: unknown) {
