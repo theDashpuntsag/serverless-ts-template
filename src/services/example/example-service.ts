@@ -6,7 +6,7 @@ import {
   getExampleItemById as getExampleItemByIdRepo,
   getExampleByQuery as getExampleByQueryRepo,
   createExampleItem as createExampleItemRepo,
-  updateExampleItem as updateExampleItemRepo
+  updateExampleItem as updateExampleItemRepo,
 } from '@/repository/example-repository';
 import { QueryRequest } from '@/dynamo';
 import CustomError from '@/error/custom-error';

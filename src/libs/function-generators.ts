@@ -3,7 +3,7 @@ import { authenticatedApiFunctionConfig, defaultApiFunctionConfig, generatePathn
 export function createDefaultFunction(dirname: string, handlerName: string, other: object = {}) {
   return {
     handler: `${generatePathname(dirname)}/handler.${handlerName}`,
-    ...other
+    ...other,
   };
 }
 
@@ -21,11 +21,11 @@ export function createDefaultApiFunction(
         http: {
           method: method,
           path: url,
-          ...defaultApiFunctionConfig
-        }
-      }
+          ...defaultApiFunctionConfig,
+        },
+      },
     ],
-    ...other
+    ...other,
   };
 }
 
@@ -43,11 +43,11 @@ export function createAuthenticatedApiFunction(
         http: {
           method: method,
           path: url,
-          ...authenticatedApiFunctionConfig
-        }
-      }
+          ...authenticatedApiFunctionConfig,
+        },
+      },
     ],
-    ...other
+    ...other,
   };
 }
 
@@ -67,9 +67,9 @@ export function createScheduledFunc(
           rate: schedule,
           name: name ? name : handler,
           description: description,
-          ...other
-        }
-      }
-    ]
+          ...other,
+        },
+      },
+    ],
   };
 }

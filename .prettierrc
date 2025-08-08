@@ -4,8 +4,16 @@
   "singleQuote": true,
   "tabWidth": 2,
   "useTabs": false,
-  "trailingComma": "none",
-  "quoteProps": "consistent",
+  "trailingComma": "es5",
+  "quoteProps": "as-needed",
   "arrowParens": "always",
-  "printWidth": 120
+  "printWidth": 120,
+  "bracketSpacing": true,
+  "bracketSameLine": false,
+  "embeddedLanguageFormatting": "auto",
+  "htmlWhitespaceSensitivity": "css",
+  "insertPragma": false,
+  "jsxSingleQuote": true,
+  "proseWrap": "preserve",
+  "requirePragma": false
 }

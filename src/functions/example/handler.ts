@@ -5,7 +5,7 @@ import {
   getExampleTableDescription,
   getExampleItemById as getExampleItemByIdService,
   getExampleItemsByQuery as getExampleItemsByQueryService,
-  createExampleItem
+  createExampleItem,
 } from '@/services/example';
 import { middyfy } from '@/libs';
 import { QueryRequestSchema } from '@/dynamo';

@@ -7,7 +7,10 @@
   "scripts": {
     "offline": "serverless offline start --reloadHandler",
     "build": "npx tsc",
-    "lint": "eslint",
+    "lint": "eslint \"src/**/*.ts\" \"serverless.ts\"",
+    "lint:fix": "eslint \"src/**/*.ts\" \"serverless.ts\" --fix",
+    "test": "vitest",
+    "test:run": "vitest run",
     "format": "prettier --write \"src/**/*.ts\"",
     "format:check": "prettier --check \"src/**/*.ts\"",
     "deploy:prod": "sls deploy --stage prod",
@@ -52,8 +55,11 @@
     "husky": "^9.1.7",
     "prettier": "^3.5.1",
     "serverless": "^4.6.2",
+    "serverless-esbuild": "^1.52.1",
     "serverless-offline": "^14.4.0",
     "serverless-prune-plugin": "^2.1.0",
+    "tsconfig-paths": "^4.2.0",
+    "typescript": "^5.3.3",
     "typescript-eslint": "^8.24.0",
     "vitest": "^3.1.4"
   }

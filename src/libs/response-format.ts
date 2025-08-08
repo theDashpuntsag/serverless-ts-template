@@ -5,7 +5,7 @@ export function formatResponse(response: object, statusCode: number = 200, other
   return {
     statusCode,
     body: JSON.stringify(response),
-    ...other
+    ...other,
   };
 }
 
@@ -16,8 +16,8 @@ export function formatApiResponse(response: object, statusCode: number = 200, ot
     headers: {
       'Access-Control-Allow-Headers': '*',
       'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Methods': 'OPTIONS,POST,GET,PUT,DELETE'
+      'Access-Control-Allow-Methods': 'OPTIONS,POST,GET,PUT,DELETE',
     },
-    ...other
+    ...other,
   };
 }
