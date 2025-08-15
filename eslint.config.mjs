@@ -11,8 +11,8 @@ export default defineConfig([
     rules: {
       '@typescript-eslint/no-unused-vars': 'warn',
       'no-unused-vars': 'warn',
-      'no-undef': 'warn'
-    }
+      'no-undef': 'warn',
+    },
   },
-  globalIgnores(['./dist/**/*', './.serverless/**/*', './turbo/**/*', './node_modules/**/*'])
+  globalIgnores(['./dist/**/*', './.serverless/**/*', './turbo/**/*', './node_modules/**/*']),
 ]);

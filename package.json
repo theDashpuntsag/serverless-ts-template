@@ -5,17 +5,18 @@
   "main": "serverless.ts",
   "private": true,
   "scripts": {
-    "offline": "serverless offline start --reloadHandler",
-    "build": "npx tsc",
-    "lint": "eslint \"src/**/*.ts\" \"serverless.ts\"",
-    "lint:fix": "eslint \"src/**/*.ts\" \"serverless.ts\" --fix",
-    "test": "vitest",
-    "test:run": "vitest run",
+    "build": "tsc --build",
+    "deploy:dev": "sls deploy --stage dev",
+    "deploy:prod": "sls deploy --stage prod",
+    "dev": "serverless offline start --reloadHandler",
     "format": "prettier --write \"src/**/*.ts\"",
     "format:check": "prettier --check \"src/**/*.ts\"",
-    "deploy:prod": "sls deploy --stage prod",
-    "deploy:dev": "sls deploy --stage dev",
-    "prepare": "husky"
+    "lint": "eslint .",
+    "lint:fix": "eslint \"src/**/*.ts\" \"serverless.ts\" --fix",
+    "offline": "serverless offline start --reloadHandler",
+    "prepare": "command -v husky >/dev/null 2>&1 && husky || echo 'Husky not available, skipping'",
+    "test": "vitest",
+    "test:run": "vitest run"
   },
   "repository": {
     "type": "git",
@@ -30,7 +31,7 @@
   "bugs": {
     "url": "https://github.com/theDashpuntsag/serverless-ts-template/issues"
   },
-  "packageManager": "pnpm@10.11.0",
+  "packageManager": "pnpm@10.14.0",
   "homepage": "https://github.com/theDashpuntsag/serverless-ts-template#readme",
   "dependencies": {
     "@aws-sdk/client-dynamodb": "^3.749.0",
@@ -55,7 +56,6 @@
     "husky": "^9.1.7",
     "prettier": "^3.5.1",
     "serverless": "^4.6.2",
-    "serverless-esbuild": "^1.52.1",
     "serverless-offline": "^14.4.0",
     "serverless-prune-plugin": "^2.1.0",
     "tsconfig-paths": "^4.2.0",

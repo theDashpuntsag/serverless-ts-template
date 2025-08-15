@@ -3,7 +3,7 @@ import type { ValidatedAPIGatewayProxyEvent } from '@/libs';
 
 import { QueryRequestSchema } from '../types';
 import { logger } from '@/libs';
-import { CustomError } from '@/error';
+import { CustomError } from '@/libs/error';
 
 type EventType = ValidatedAPIGatewayProxyEvent<object | null>;
 

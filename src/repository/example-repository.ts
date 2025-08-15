@@ -1,7 +1,7 @@
 import type { DescribeTableCommandOutput } from '@aws-sdk/client-dynamodb';
-import type { CustomQueryCommandOutput as QueryOutput, QueryRequest } from '@/dynamo';
+import type { CustomQueryCommandOutput as QueryOutput, QueryRequest } from '@/libs/dynamo';
 
-import { createRecord, getRecordByKey, getTableDescription, queryRecords, updateRecord } from '@/dynamo';
+import { createRecord, getRecordByKey, getTableDescription, queryRecords, updateRecord } from '@/libs/dynamo';
 
 const TABLE_NAME = '';
 
