@@ -16,7 +16,9 @@
     "offline": "serverless offline start --reloadHandler",
     "prepare": "command -v husky >/dev/null 2>&1 && husky || echo 'Husky not available, skipping'",
     "test": "vitest",
-    "test:run": "vitest run"
+    "test:run": "vitest run",
+    "test:coverage": "vitest run --coverage",
+    "type-check": "tsc --noEmit"
   },
   "repository": {
     "type": "git",

@@ -1,0 +1,12 @@
+{
+  "recommendations": [
+    "bradlc.vscode-tailwindcss",
+    "ms-vscode.vscode-typescript-next",
+    "esbenp.prettier-vscode",
+    "ms-vscode.vscode-eslint",
+    "amazonwebservices.aws-toolkit-vscode",
+    "ms-vscode.vscode-json",
+    "redhat.vscode-yaml",
+    "vitest.explorer"
+  ]
+}

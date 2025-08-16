@@ -7,7 +7,7 @@ import {
   putUpdateExampleItem,
 } from '@/functions/example';
 
-const serverlessConfig: AWS = {
+const serverlessConfig: AWS & { build?: { esbuild: Record<string, unknown> } } = {
   service: 'service-name',
   frameworkVersion: '4',
   app: 'app-name',
@@ -15,7 +15,7 @@ const serverlessConfig: AWS = {
   provider: {
     name: 'aws',
     stage: "${opt:stage, 'prod'}",
-    runtime: 'nodejs18.x',
+    runtime: 'nodejs20.x',
     region: 'ap-southeast-1',
     profile: 'default',
     logRetentionInDays: 365,
@@ -28,23 +28,25 @@ const serverlessConfig: AWS = {
     putUpdateExampleItem,
   },
   package: { individually: true },
+  build: {
+    esbuild: {
+      bundle: true,
+      minify: false,
+      sourcemap: true,
+      exclude: ['@aws-sdk/*'],
+      target: 'node18',
+      define: { 'require.resolve': undefined },
+      platform: 'node',
+      concurrency: 10,
+    },
+  },
   custom: {
     prune: {
       automatic: true,
       number: 2,
     },
     function_timeout: {
-      ain: 29,
-    },
-    esbuild: {
-      bundle: true,
-      minify: false,
-      sourcemap: true,
-      exclude: ['aws-sdk', 'pg-hstore'],
-      target: 'node18',
-      define: { 'require.resolve': undefined },
-      platform: 'node',
-      concurrency: 10,
+      main: 29,
     },
   },
 };
