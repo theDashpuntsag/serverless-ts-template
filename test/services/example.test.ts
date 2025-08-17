@@ -1,8 +1,8 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { getExampleTableDescription, getExampleItemById } from '@/services/example';
+import { getExampleTableDescription, getExampleItemById } from '../../src/services/example';
 
 // Mock the repository
-vi.mock('@/repository', () => ({
+vi.mock('../../src/repository', () => ({
   exampleRepository: {
     getTableDescription: vi.fn(),
     getById: vi.fn(),
