@@ -7,7 +7,7 @@ import {
   putUpdateExampleItem,
 } from '@/functions/example';
 
-const serverlessConfig: AWS & { build?: { esbuild: Record<string, unknown> } } = {
+const serverlessConfig: AWS = {
   service: 'service-name',
   frameworkVersion: '4',
   app: 'app-name',
@@ -18,7 +18,28 @@ const serverlessConfig: AWS & { build?: { esbuild: Record<string, unknown> } } =
     runtime: 'nodejs20.x',
     region: 'ap-southeast-1',
     profile: 'default',
+    timeout: 29,
+    memorySize: 512,
+    architecture: 'arm64',
+    deploymentBucket: {
+      blockPublicAccess: true,
+    },
+    apiGateway: {
+      minimumCompressionSize: 1024, // Compress responses larger than 1KB
+      shouldStartNameWithService: true, // Include the service name in API Gateway endpoint URLs
+      usagePlan: {
+        throttle: {
+          burstLimit: 150, // Maximum number of requests per second
+          rateLimit: 100, // Average number of requests per second
+        },
+      },
+    },
     logRetentionInDays: 365,
+    environment: {
+      STAGE: '${self:provider.stage}',
+      REGION: '${self:provider.region}',
+    },
+    iam: { role: 'YOUR_ROLE_HERE' },
   },
   functions: {
     getExampleTableDesc,
@@ -28,27 +49,7 @@ const serverlessConfig: AWS & { build?: { esbuild: Record<string, unknown> } } =
     putUpdateExampleItem,
   },
   package: { individually: true },
-  build: {
-    esbuild: {
-      bundle: true,
-      minify: false,
-      sourcemap: true,
-      exclude: ['@aws-sdk/*'],
-      target: 'node18',
-      define: { 'require.resolve': undefined },
-      platform: 'node',
-      concurrency: 10,
-    },
-  },
-  custom: {
-    prune: {
-      automatic: true,
-      number: 2,
-    },
-    function_timeout: {
-      main: 29,
-    },
-  },
+  custom: { prune: { automatic: true, number: 2 } },
 };
 
-module.exports = serverlessConfig;
+export default serverlessConfig;
