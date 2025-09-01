@@ -1,10 +1,12 @@
-import type { CustomAPIGatewayEvent as ApiFunc } from '@/types/api-gateway';
-import type { APIGatewayProxyResultV2 as ApiFuncRes } from 'aws-lambda';
+import type { ValidatedAPIGatewayProxyEvent } from '@/types';
+import type { APIGatewayProxyResultV2 } from 'aws-lambda';
 
 import { authenticatedApiFunctionConfig, defaultApiFunctionConfig, generatePathname } from './function-configs';
 import { handleApiFuncError } from '../error';
-import { middyfy } from '../utility';
 import { formatApiResponse } from './response-format';
+import middy from '@middy/core';
+import middyJsonBodyParser from '@middy/http-json-body-parser';
+
 /**
  * @fileoverview Lambda function configuration generators for serverless applications.
  * Provides utilities to create standardized Lambda function configurations for different use cases.
@@ -146,15 +148,19 @@ export function createScheduledFunc(
   };
 }
 
-export function createApiGatewayFunction<S>(handler: (event: ApiFunc<S>) => Promise<object>) {
-  const lambdaFunction = async (event: ApiFunc<S>) => {
+/**
+ * Creates an API Gateway Lambda function with a specific callback.
+ *
+ * @param callback
+ * @returns
+ */
+export function createApiGatewayFunction<S>(callback: (_event: ValidatedAPIGatewayProxyEvent<S>) => Promise<object>) {
+  return middy(async (event: ValidatedAPIGatewayProxyEvent<S>): Promise<APIGatewayProxyResultV2> => {
     try {
-      const result = await handler(event);
+      const result = await callback(event);
       return formatApiResponse(result);
     } catch (error: unknown) {
       return handleApiFuncError(error);
     }
-  };
-
-  return middyfy(lambdaFunction);
+  }).use(middyJsonBodyParser());
 }

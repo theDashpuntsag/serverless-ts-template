@@ -1,4 +1,9 @@
+import type { APIGatewayProxyEvent, APIGatewayProxyResultV2, Handler } from 'aws-lambda';
+
 import { z } from 'zod';
+
+export type ValidatedAPIGatewayProxyEvent<S> = Omit<APIGatewayProxyEvent, 'body'> & { body: S };
+export type CustomAPIGatewayHandler<S> = Handler<ValidatedAPIGatewayProxyEvent<S>, APIGatewayProxyResultV2>;
 
 export const QueryParamsSchema = z.record(z.string());
 

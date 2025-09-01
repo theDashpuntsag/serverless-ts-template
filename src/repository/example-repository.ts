@@ -3,7 +3,7 @@ import type { CustomQueryCommandOutput as QueryOutput, QueryRequest } from '@/li
 
 import { createRecord, getRecordByKey, getTableDescription, queryRecords, updateRecord } from '@/libs/dynamo';
 
-const TABLE_NAME = 'example table';
+const TABLE_NAME = '';
 
 export async function getExampleTableDescription(): Promise<DescribeTableCommandOutput> {
   return await getTableDescription(TABLE_NAME);
