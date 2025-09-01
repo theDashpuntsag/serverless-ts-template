@@ -1,9 +1,9 @@
 import type { GenericFuncResponse, LbdFuncResponse } from '@/types';
 
 import { InvocationType, InvokeCommand, LambdaClient } from '@aws-sdk/client-lambda';
-import { logger } from './winston';
+import { logger } from '../utility/winston';
 
-const lambdaClient = new LambdaClient({ region: 'ap-southeast-1' });
+const lambdaClient = new LambdaClient({ region: process.env.AWS_REGION || 'ap-southeast-1' });
 
 /**
  * Invokes an AWS Lambda function with the specified name, payload, and invocation type.
@@ -30,7 +30,7 @@ const lambdaClient = new LambdaClient({ region: 'ap-southeast-1' });
  *
  * @remarks
  * This function uses the AWS SDK for JavaScript v3's LambdaClient to send the invocation command.
- * Ensure that the Lambda function exists, the AWS region is set correctly, and the required IAM permissions are in place.
+ * Ensure that the Lambda function exists, the AWS  is set correctly, and the required IAM permissions are in place.
  */
 export async function invokeLambdaFunc<T>(
   fnName: string,

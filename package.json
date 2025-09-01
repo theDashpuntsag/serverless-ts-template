@@ -3,6 +3,7 @@
   "version": "0.0.0",
   "description": "A serverless framework template for typescript",
   "main": "serverless.ts",
+  "type": "module",
   "private": true,
   "scripts": {
     "build": "tsc --build",

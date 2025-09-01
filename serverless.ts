@@ -39,7 +39,7 @@ const serverlessConfig: AWS = {
       STAGE: '${self:provider.stage}',
       REGION: '${self:provider.region}',
     },
-    iam: { role: 'YOUR_ROLE_HERE' },
+    // iam: { role: 'YOUR_ROLE_HERE' },
   },
   functions: {
     getExampleTableDesc,

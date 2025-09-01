@@ -3,7 +3,7 @@ import type { ParameterType } from '@aws-sdk/client-ssm';
 import { GetParameterCommand, PutParameterCommand, SSMClient } from '@aws-sdk/client-ssm';
 import { logger } from '@/libs';
 
-const client = new SSMClient({ region: 'ap-southeast-1' });
+const client = new SSMClient({ region: process.env.AWS_REGION || 'ap-southeast-1' });
 
 /**
  * Retrieves the value of a parameter from AWS SSM Parameter Store.

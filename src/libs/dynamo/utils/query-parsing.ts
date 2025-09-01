@@ -1,5 +1,5 @@
 import type { QueryRequest } from '../types';
-import type { ValidatedAPIGatewayProxyEvent } from '@/libs';
+import type { ValidatedAPIGatewayProxyEvent } from '@/types';
 
 import { QueryRequestSchema } from '../types';
 import { logger } from '@/libs';

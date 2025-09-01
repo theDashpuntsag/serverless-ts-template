@@ -4,10 +4,14 @@ import type { QueryParams, RequestMetadata } from '@/types';
 import { logger } from '@/libs';
 
 interface ExtendedAPIGatewayProxyEvent extends Omit<APIGatewayProxyEvent, 'body'> {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  body?: any;
+  body?: unknown;
 }
-
+/**
+ * Extracts metadata from the API Gateway event.
+ *
+ * @param event
+ * @returns
+ */
 const extractMetadata = (event: ExtendedAPIGatewayProxyEvent): RequestMetadata => {
   try {
     const ipAddress = event.requestContext.identity.sourceIp;

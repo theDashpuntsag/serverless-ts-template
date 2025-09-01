@@ -1,25 +1,20 @@
-import type { CustomAPIGatewayEvent as ApiFunc } from '@/libs/api-gateway';
+import type { CustomAPIGatewayEvent as ApiFunc } from '@/types/api-gateway';
 import type { APIGatewayProxyResultV2 as ApiFuncRes } from 'aws-lambda';
 
 import {
-  getExampleTableDescription,
   getExampleItemById as getExampleItemByIdService,
   getExampleItemsByQuery as getExampleItemsByQueryService,
   createExampleItem,
 } from '@/services/example';
-import { middyfy, formatApiResponse } from '@/libs';
+import { middyfy, formatApiResponse, createApiGatewayFunction } from '@/libs';
 import { QueryRequestSchema } from '@/libs/dynamo';
-import { extractMetadata } from '@/libs/auth';
+import { extractMetadata } from '@/libs/lambda/auth';
 import { CustomError, handleApiFuncError } from '@/libs/error';
 
-const getExampleTableDescFunc: ApiFunc<null> = async (): Promise<ApiFuncRes> => {
-  try {
-    const result = await getExampleTableDescription();
-    return formatApiResponse(result);
-  } catch (error: unknown) {
-    return handleApiFuncError(error);
-  }
-};
+export const getExampleTableDesc = createApiGatewayFunction<null>(async (event) => {
+  console.log('event:', event);
+  return { message: 'helloWorld' };
+});
 
 const getExampleItemByIdFunc: ApiFunc<null> = async (event): Promise<ApiFuncRes> => {
   try {
@@ -72,7 +67,7 @@ const putUpdateExampleItemFunc: ApiFunc<object> = async (event): Promise<ApiFunc
   }
 };
 
-export const getExampleTableDesc = middyfy(getExampleTableDescFunc);
+// export const getExampleTableDesc = middyfy(getExampleTableDescFunc);
 export const getExampleItemById = middyfy(getExampleItemByIdFunc);
 export const getExampleItemsByQuery = middyfy(getExampleItemsByQueryFunc);
 export const postCreateExampleItem = middyfy(postCreateExampleItemFunc);
