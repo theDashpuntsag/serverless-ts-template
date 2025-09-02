@@ -1,6 +1,6 @@
 import type { ReturnConsumedCapacity, ReturnItemCollectionMetrics, ReturnValue } from '@aws-sdk/client-dynamodb';
 import { QueryRequestSchema } from './query.types';
-import { Primitive, z } from 'zod';
+import { z } from 'zod';
 
 const returnConsumedCapacitySchema = z.enum(['INDEXES', 'TOTAL', 'NONE']);
 const returnItemCollectionMetricsSchema = z.enum(['SIZE', 'NONE']);
@@ -75,7 +75,7 @@ export type CustomPutCommandInput<T> = {
 export const CustomUpdateItemInputSchema = <T extends z.ZodTypeAny>(itemSchema: T) =>
   z.object({
     tableName: z.string(),
-    key: z.record(z.any()),
+    key: z.record(z.string(), z.unknown()),
     items: z.array(itemSchema),
     updateExpression: z.string(), // The update expression specifying attributes to update (required)
     conditionExpression: z.string().optional(),
@@ -92,7 +92,7 @@ export const CustomUpdateItemInputSchema = <T extends z.ZodTypeAny>(itemSchema: 
 
 export type CustomUpdateItemInput<T> = {
   tableName: string;
-  key: Record<string, Primitive>;
+  key: Record<string, unknown>;
   item: Partial<T>;
   updateExpression?: string;
   conditionExpression?: string;

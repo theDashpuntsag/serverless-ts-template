@@ -21,7 +21,7 @@ const extractMetadata = (event: ExtendedAPIGatewayProxyEvent): RequestMetadata =
     const body = event.body;
     return { ipAddress, token, headers, queryParams, body };
   } catch (error) {
-    logger.error('Err', error);
+    logger.error('Error', error);
     throw new Error('Unable to process request!');
   }
 };

@@ -38,7 +38,7 @@ export const getExampleItemsByQuery = createApiGatewayFunction<object>(async (ev
   const parseResult = QueryRequestSchema.safeParse({ indexName: queryParams.index, ...queryParams });
 
   if (!parseResult.success) {
-    const validationErrors = parseResult.error.errors.map((err) => err.path).join(', ');
+    const validationErrors = parseResult.error.issues.map((err) => err.path).join(', ');
     throw new CustomError(`Query params are missing!, ${validationErrors}`);
   }
 

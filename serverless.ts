@@ -15,7 +15,7 @@ const serverlessConfig: AWS = {
   provider: {
     name: 'aws',
     stage: "${opt:stage, 'prod'}",
-    runtime: 'nodejs20.x',
+    runtime: 'nodejs22.x',
     region: 'ap-southeast-1',
     profile: 'default',
     timeout: 29,

@@ -37,7 +37,7 @@ export function extractQueryParamsFromEvent(event: EventType, query: QueryReques
   if (Object.keys(queryParams).length === 0) {
     const parseResult = QueryRequestSchema.safeParse(query);
     if (!parseResult.success) {
-      const errorDetails = parseResult.error.errors.map((err) => `${err.path}: ${err.message}`).join(', ');
+      const errorDetails = parseResult.error.issues.map((err) => `${err.path}: ${err.message}`).join(', ');
       logger.warn(`Invalid default query! ${errorDetails}`);
       throw new CustomError(`Invalid default query! ${errorDetails}`, 400);
     }
@@ -67,7 +67,7 @@ export function extractQueryParamsFromEvent(event: EventType, query: QueryReques
     // Validate the merged parameters against the schema
     const parseResult = QueryRequestSchema.safeParse(params);
     if (!parseResult.success) {
-      const errorDetails = parseResult.error.errors.map((err) => `${err.path}: ${err.message}`).join(', ');
+      const errorDetails = parseResult.error.issues.map((err) => `${err.path}: ${err.message}`).join(', ');
       logger.warn(`Bad request! ${errorDetails}`);
       throw new CustomError(`Bad request! ${errorDetails}`, 400);
     }
@@ -95,7 +95,7 @@ export function extractQueryParamsFromEvent(event: EventType, query: QueryReques
   // Validate the constructed parameters against the schema
   const parseResult = QueryRequestSchema.safeParse(params);
   if (!parseResult.success) {
-    const errorDetails = parseResult.error.errors.map((err) => `${err.path}: ${err.message}`).join(', ');
+    const errorDetails = parseResult.error.issues.map((err) => `${err.path}: ${err.message}`).join(', ');
     logger.warn(`Bad request! ${errorDetails}`);
     throw new CustomError(`Bad request! ${errorDetails}`, 400);
   }

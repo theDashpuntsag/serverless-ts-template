@@ -34,36 +34,36 @@
   "bugs": {
     "url": "https://github.com/theDashpuntsag/serverless-ts-template/issues"
   },
-  "packageManager": "pnpm@10.14.0",
+  "packageManager": "pnpm@10.15.0",
   "homepage": "https://github.com/theDashpuntsag/serverless-ts-template#readme",
   "dependencies": {
-    "@aws-sdk/client-dynamodb": "^3.749.0",
-    "@aws-sdk/client-lambda": "^3.749.0",
-    "@aws-sdk/client-ssm": "^3.749.0",
-    "@aws-sdk/lib-dynamodb": "^3.749.0",
+    "@aws-sdk/client-dynamodb": "^3.883.0",
+    "@aws-sdk/client-lambda": "^3.883.0",
+    "@aws-sdk/client-ssm": "^3.883.0",
+    "@aws-sdk/lib-dynamodb": "^3.883.0",
     "aws-lambda": "^1.0.7",
-    "axios": "^1.7.9",
+    "axios": "^1.11.0",
     "winston": "^3.17.0",
-    "zod": "^3.24.2"
+    "zod": "^4.1.5"
   },
   "devDependencies": {
-    "@eslint/js": "^9.20.0",
+    "@eslint/js": "^9.35.0",
     "@middy/core": "^4.7.0",
     "@middy/http-json-body-parser": "^4.7.0",
     "@serverless/eslint-config": "^5.1.0",
-    "@serverless/typescript": "^3.38.0",
-    "@types/aws-lambda": "^8.10.147",
-    "@types/node": "^22.13.4",
-    "eslint": "^9.27.0",
+    "@serverless/typescript": "^4.18.2",
+    "@types/aws-lambda": "^8.10.152",
+    "@types/node": "^22.18.1",
+    "eslint": "^9.35.0",
     "globals": "^15.15.0",
     "husky": "^9.1.7",
-    "prettier": "^3.5.1",
-    "serverless": "^4.6.2",
+    "prettier": "^3.6.2",
+    "serverless": "^4.18.2",
     "serverless-offline": "^14.4.0",
     "serverless-prune-plugin": "^2.1.0",
     "tsconfig-paths": "^4.2.0",
-    "typescript": "^5.3.3",
-    "typescript-eslint": "^8.24.0",
-    "vitest": "^3.1.4"
+    "typescript": "^5.9.2",
+    "typescript-eslint": "^8.42.0",
+    "vitest": "^3.2.4"
   }
 }
