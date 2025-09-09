@@ -1,12 +1,37 @@
 {
   "recommendations": [
-    "bradlc.vscode-tailwindcss",
     "ms-vscode.vscode-typescript-next",
     "esbenp.prettier-vscode",
-    "ms-vscode.vscode-eslint",
-    "amazonwebservices.aws-toolkit-vscode",
+    "ms-vscode.eslint",
+    "bradlc.vscode-tailwindcss",
     "ms-vscode.vscode-json",
     "redhat.vscode-yaml",
-    "vitest.explorer"
-  ]
+    "ms-vscode-remote.remote-containers",
+    "ms-vscode.remote-repositories",
+    "github.copilot",
+    "github.copilot-chat",
+    "ms-vscode.vscode-npm-scripts",
+    "christian-kohler.path-intellisense",
+    "formulahendry.auto-rename-tag",
+    "streetsidesoftware.code-spell-checker",
+    "ms-vscode.vscode-thunder-client",
+    "humao.rest-client",
+    "amazonwebservices.aws-toolkit-vscode",
+    "ms-vscode.vscode-docker",
+    "ms-kubernetes-tools.vscode-kubernetes-tools",
+    "github.vscode-pull-request-github",
+    "eamodio.gitlens",
+    "donjayamanne.githistory",
+    "pflannery.vscode-versionlens",
+    "gruntfuggly.todo-tree",
+    "wayou.vscode-todo-highlight",
+    "aaron-bond.better-comments",
+    "oderwat.indent-rainbow",
+    "pkief.material-icon-theme",
+    "zhuangtongfa.material-theme",
+    "ms-vscode.vscode-typescript-tslint-plugin",
+    "ms-vscode.vscode-node-debug2",
+    "ms-vscode.vscode-js-debug-nightly"
+  ],
+  "unwantedRecommendations": ["ms-vscode.vscode-typescript-tslint-plugin", "hookyqr.beautify"]
 }

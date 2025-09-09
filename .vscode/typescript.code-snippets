@@ -1,0 +1,220 @@
+{
+  "TypeScript Function": {
+    "prefix": "tsf",
+    "body": [
+      "export const ${1:functionName} = (${2:params}): ${3:ReturnType} => {",
+      "\t${4:// Implementation}",
+      "\treturn ${5:result};",
+      "};"
+    ],
+    "description": "Create a TypeScript function"
+  },
+  "TypeScript Interface": {
+    "prefix": "tsi",
+    "body": ["export interface ${1:InterfaceName} {", "\t${2:property}: ${3:type};", "}"],
+    "description": "Create a TypeScript interface"
+  },
+  "TypeScript Type": {
+    "prefix": "tst",
+    "body": ["export type ${1:TypeName} = ${2:type};"],
+    "description": "Create a TypeScript type"
+  },
+  "Declare Async function": {
+    "prefix": "daf",
+    "body": [
+      "export async function ${1:functionName}(${2:params}): Promise<${3:ReturnType}> {",
+      "\t${4:// Implementation}",
+      "\treturn ${5:result};",
+      "}"
+    ],
+    "description": "Declare an async function with Promise return type"
+  },
+  "AWS Lambda Handler": {
+    "prefix": "lambda",
+    "body": [
+      "import { ${1:serviceName}Service } from '@/services/${2:entityName}';",
+      "import { createApiGatewayFunction, CustomError, extractMetadata } from '@custom-repo/global-libs';",
+      "",
+      "export const ${3:handlerName} = createApiGatewayFunction(async (event) => {",
+      "\t${4:// Implementation}",
+      "\treturn await ${1:serviceName}Service();",
+      "});"
+    ],
+    "description": "Create an AWS Lambda handler with createApiGatewayFunction"
+  },
+  "Lambda GET by ID": {
+    "prefix": "lambdaget",
+    "body": [
+      "import { ${1:serviceName}Service } from '@/services/${2:entityName}';",
+      "import { createApiGatewayFunction, CustomError } from '@custom-repo/global-libs';",
+      "",
+      "export const get${3:EntityName}ById = createApiGatewayFunction(async (event) => {",
+      "\tif (!event.pathParameters || !event.pathParameters.id) {",
+      "\t\tthrow new CustomError('Path variable is missing');",
+      "\t}",
+      "\tconst { id } = event.pathParameters;",
+      "",
+      "\treturn await ${1:serviceName}Service(id);",
+      "});"
+    ],
+    "description": "Create a Lambda handler for GET by ID"
+  },
+  "Lambda POST Create": {
+    "prefix": "lambdapost",
+    "body": [
+      "import { ${1:serviceName}Service } from '@/services/${2:entityName}';",
+      "import { createApiGatewayFunction, CustomError, extractMetadata } from '@custom-repo/global-libs';",
+      "",
+      "export const postCreate${3:EntityName} = createApiGatewayFunction<${4:EntityType}>(async (event) => {",
+      "\tconst { body } = extractMetadata(event);",
+      "\tif (!body) throw new CustomError('Request body is missing');",
+      "",
+      "\treturn await ${1:serviceName}Service(body as ${4:EntityType});",
+      "});"
+    ],
+    "description": "Create a Lambda handler for POST create"
+  },
+  "Lambda PUT Update": {
+    "prefix": "lambdaput",
+    "body": [
+      "import { ${1:serviceName}Service } from '@/services/${2:entityName}';",
+      "import { createApiGatewayFunction, CustomError, extractMetadata } from '@custom-repo/global-libs';",
+      "",
+      "export const putUpdate${3:EntityName} = createApiGatewayFunction<${4:EntityType}>(async (event) => {",
+      "\tif (!event.pathParameters || !event.pathParameters.id) {",
+      "\t\tthrow new CustomError('Path variable is missing');",
+      "\t}",
+      "",
+      "\tconst { body } = extractMetadata(event);",
+      "\tif (!body) throw new CustomError('Request body is missing');",
+      "",
+      "\treturn await ${1:serviceName}Service(event.pathParameters.id, body as ${4:EntityType});",
+      "});"
+    ],
+    "description": "Create a Lambda handler for PUT update"
+  },
+  "Lambda Query": {
+    "prefix": "lambdaquery",
+    "body": [
+      "import { ${1:serviceName}Service } from '@/services/${2:entityName}';",
+      "import { createApiGatewayFunction, CustomError, extractMetadata } from '@custom-repo/global-libs';",
+      "import { QueryRequestSchema } from '@custom-repo/dynamo';",
+      "",
+      "export const get${3:EntityName}sByQuery = createApiGatewayFunction(async (event) => {",
+      "\tconst { queryParams } = extractMetadata(event);",
+      "\tif (!queryParams) throw new CustomError('Query params are missing!');",
+      "",
+      "\tconst parseResult = QueryRequestSchema.safeParse({ indexName: queryParams.index, ...queryParams });",
+      "",
+      "\tif (!parseResult.success) {",
+      "\t\tconst validationErrors = parseResult.error.issues.map((err) => err.path.join('.')).join(', ');",
+      "\t\tthrow new CustomError(`Query params are missing!, \\${validationErrors}`);",
+      "\t}",
+      "",
+      "\treturn await ${1:serviceName}Service(parseResult.data);",
+      "});"
+    ],
+    "description": "Create a Lambda handler for query operations"
+  },
+  "DynamoDB Service": {
+    "prefix": "dynamo",
+    "body": [
+      "import type {",
+      "\tDescribeTableCommandOutput,",
+      "\tCustomQueryCommandOutput as QueryOutput,",
+      "\tQueryRequest",
+      "} from '@custom-repo/dynamo';",
+      "",
+      "import { createRecord, getRecordByKey, getTableDescription, queryRecords, updateRecord } from '@custom-repo/dynamo';",
+      "",
+      "const TABLE_NAME = '${1:tableName}';",
+      "",
+      "export async function get${2:Example}TableDescription(): Promise<DescribeTableCommandOutput> {",
+      "\treturn await getTableDescription(TABLE_NAME);",
+      "}",
+      "",
+      "export async function get${2:Example}ItemById<T>(id: string, projectionExp?: string): Promise<Partial<T> | undefined> {",
+      "\tconst params = {",
+      "\t\ttableName: TABLE_NAME,",
+      "\t\tkey: { id },",
+      "\t\tprojectionExpression: projectionExp",
+      "\t};",
+      "",
+      "\treturn await getRecordByKey<T>(params);",
+      "}",
+      "",
+      "export async function get${2:Example}ByQuery<T>(queryRequest: QueryRequest): Promise<QueryOutput<Partial<T>>> {",
+      "\treturn await queryRecords<T>({ tableName: TABLE_NAME, queryRequest });",
+      "}",
+      "",
+      "export async function create${2:Example}Item<T>(newItem: T): Promise<T> {",
+      "\treturn await createRecord<T>({ tableName: TABLE_NAME, item: newItem });",
+      "}",
+      "",
+      "export async function update${2:Example}Item<T>(key: { id: string }, ${3:example}Item: T): Promise<T | undefined> {",
+      "\treturn await updateRecord<T>({",
+      "\t\ttableName: TABLE_NAME,",
+      "\t\tkey,",
+      "\t\titem: ${3:example}Item",
+      "\t});",
+      "}"
+    ],
+    "description": "Create a complete DynamoDB service with custom repo functions"
+  },
+  "Zod Schema": {
+    "prefix": "zod",
+    "body": [
+      "import { z } from 'zod';",
+      "",
+      "export const ${1:schemaName}Schema = z.object({",
+      "\t${2:property}: z.${3:string}(),",
+      "});",
+      "",
+      "export type ${1:schemaName} = z.infer<typeof ${1:schemaName}Schema>;"
+    ],
+    "description": "Create a Zod schema with TypeScript type"
+  },
+
+  "Async Try-Catch": {
+    "prefix": "tryasync",
+    "body": [
+      "try {",
+      "\t${1:// Async operation}",
+      "} catch (error) {",
+      "\tconsole.error('Error in ${2:function}:', error);",
+      "\t${3:// Error handling}",
+      "}"
+    ],
+    "description": "Create a try-catch block for async operations"
+  },
+  "Console Log with Context": {
+    "prefix": "clog",
+    "body": ["console.log('${1:context}:', JSON.stringify(${2:data}, null, 2));"],
+    "description": "Console log with context and formatted JSON"
+  },
+  "Package.json Script": {
+    "prefix": "script",
+    "body": ["\"${1:scriptName}\": \"${2:command}\""],
+    "description": "Add a script to package.json"
+  },
+  "TypeScript Test": {
+    "prefix": "test",
+    "body": [
+      "import { describe, it, expect } from '@jest/globals';",
+      "",
+      "describe('${1:TestSuite}', () => {",
+      "\tit('should ${2:test description}', async () => {",
+      "\t\t// Arrange",
+      "\t\t${3:// Setup test data}",
+      "",
+      "\t\t// Act",
+      "\t\t${4:// Execute test}",
+      "",
+      "\t\t// Assert",
+      "\t\texpect(${5:result}).${6:toBe}(${7:expected});",
+      "\t});",
+      "});"
+    ],
+    "description": "Create a TypeScript test with Jest"
+  }
+}

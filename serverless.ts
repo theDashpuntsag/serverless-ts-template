@@ -1,11 +1,11 @@
-import type { AWS } from '@serverless/typescript';
 import {
-  getExampleTableDesc,
   getExampleItemById,
   getExampleItemsByQuery,
+  getExampleTableDesc,
   postCreateExampleItem,
   putUpdateExampleItem,
 } from '@/functions/example';
+import type { AWS } from '@serverless/typescript';
 
 const serverlessConfig: AWS = {
   service: 'service-name',

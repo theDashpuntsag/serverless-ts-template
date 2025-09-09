@@ -1,0 +1,174 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Build All",
+      "type": "shell",
+      "command": "pnpm",
+      "args": ["run", "build"],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      },
+      "problemMatcher": ["$tsc"]
+    },
+    {
+      "label": "Type Check All",
+      "type": "shell",
+      "command": "pnpm",
+      "args": ["run", "type-check"],
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      },
+      "problemMatcher": ["$tsc"]
+    },
+    {
+      "label": "Lint All",
+      "type": "shell",
+      "command": "pnpm",
+      "args": ["run", "lint"],
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      },
+      "problemMatcher": ["$eslint-stylish"]
+    },
+    {
+      "label": "Format All",
+      "type": "shell",
+      "command": "pnpm",
+      "args": ["run", "format:fix"],
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      }
+    },
+    {
+      "label": "Clean All",
+      "type": "shell",
+      "command": "pnpm",
+      "args": ["run", "clean"],
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      }
+    },
+    {
+      "label": "Install Dependencies",
+      "type": "shell",
+      "command": "pnpm",
+      "args": ["install"],
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      }
+    },
+    {
+      "label": "Start Serverless Offline",
+      "type": "shell",
+      "command": "pnpm",
+      "args": ["run", "offline"],
+      "options": {
+        "cwd": "${workspaceFolder}/stacks/example-stack"
+      },
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": true,
+        "panel": "dedicated"
+      },
+      "isBackground": true,
+      "problemMatcher": {
+        "pattern": {
+          "regexp": "."
+        },
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": "Starting Offline",
+          "endsPattern": "Offline \\[http for lambda\\] listening on"
+        }
+      }
+    },
+    {
+      "label": "Deploy Stack",
+      "type": "shell",
+      "command": "pnpm",
+      "args": ["run", "deploy"],
+      "options": {
+        "cwd": "${workspaceFolder}/stacks/example-stack"
+      },
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": true,
+        "panel": "dedicated"
+      }
+    },
+    {
+      "label": "Watch TypeScript",
+      "type": "shell",
+      "command": "pnpm",
+      "args": ["run", "build", "--watch"],
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      },
+      "isBackground": true,
+      "problemMatcher": ["$tsc-watch"]
+    },
+    {
+      "label": "Test All",
+      "type": "shell",
+      "command": "pnpm",
+      "args": ["run", "test"],
+      "group": "test",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      }
+    },
+    {
+      "label": "Test Watch",
+      "type": "shell",
+      "command": "pnpm",
+      "args": ["run", "test:watch"],
+      "group": "test",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      },
+      "isBackground": true
+    }
+  ]
+}
