@@ -1,14 +1,14 @@
-import {
-  getExampleItemById as getExampleItemByIdService,
-  getExampleItemsByQuery as getExampleItemsByQueryService,
-  createExampleItem,
-  getExampleTableDescription,
-  updateExampleItem,
-} from '@/services/example';
 import { createApiGatewayFunction } from '@/libs';
 import { QueryRequestSchema } from '@/libs/dynamo';
-import { extractMetadata } from '@/libs/lambda/auth';
 import { CustomError } from '@/libs/error';
+import { extractMetadata } from '@/libs/lambda/auth';
+import {
+  createExampleItem,
+  getExampleItemById as getExampleItemByIdService,
+  getExampleItemsByQuery as getExampleItemsByQueryService,
+  getExampleItemTableDesc as getExampleTableDescription,
+  updateExampleItem,
+} from '@/services/example';
 
 /**
  *  Get example table description
@@ -25,7 +25,9 @@ export const getExampleTableDesc = createApiGatewayFunction<null>(async (_event)
 export const getExampleItemById = createApiGatewayFunction<null>(async (event) => {
   if (!event.pathParameters || !event.pathParameters.id) throw new CustomError(`Path variable is missing`);
   const { id } = event.pathParameters;
-  return await getExampleItemByIdService(id);
+  const response = await getExampleItemByIdService(id);
+  if (!response) throw new CustomError(`Item with id: ${id} not found`, 404);
+  return response;
 });
 
 /**
@@ -52,7 +54,7 @@ export const getExampleItemsByQuery = createApiGatewayFunction<object>(async (ev
 export const postCreateExampleItem = createApiGatewayFunction<object>(async (event) => {
   const { body } = extractMetadata(event);
   if (!body) throw new CustomError('Request body is missing');
-  return await createExampleItem(body as object);
+  return await createExampleItem(body);
 });
 
 /**
@@ -60,7 +62,8 @@ export const postCreateExampleItem = createApiGatewayFunction<object>(async (eve
  *
  */
 export const putUpdateExampleItem = createApiGatewayFunction<object>(async (event) => {
+  if (!event.pathParameters || !event.pathParameters.id) throw new CustomError(`Path variable is missing`);
   const { body } = extractMetadata(event);
   if (!body) throw new CustomError('Request body is missing');
-  return await updateExampleItem(body as object);
+  return await updateExampleItem(event.pathParameters.id, body);
 });

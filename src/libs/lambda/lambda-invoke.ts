@@ -1,4 +1,4 @@
-import type { GenericFuncResponse, LbdFuncResponse } from '@/types';
+import type { GenericFuncResponse, LbdFuncResponse } from '@/@types';
 
 import { InvocationType, InvokeCommand, LambdaClient } from '@aws-sdk/client-lambda';
 import { logger } from '../utility/winston';

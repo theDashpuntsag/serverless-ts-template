@@ -1,32 +1,62 @@
-import type { DescribeTableCommandOutput } from '@aws-sdk/client-dynamodb';
-import type { CustomQueryCommandOutput as QueryOutput, QueryRequest } from '@/libs/dynamo';
-
+import type { ExampleItem } from '@/@types';
+import type {
+  DescribeTableCommandOutput,
+  QueryRequest as Query,
+  CustomQueryCommandOutput as QueryOutput,
+} from '@/libs/dynamo';
 import { createRecord, getRecordByKey, getTableDescription, queryRecords, updateRecord } from '@/libs/dynamo';
+import { omit } from '@/libs/utility';
 
-const TABLE_NAME = '';
+export type QueriedExampleItems = QueryOutput<PartialExampleItem>;
+export type PartialExampleItem = Partial<ExampleItem>;
+export type OptPartialExampleItem = Partial<ExampleItem> | undefined;
+export type OptionalExampleItem = ExampleItem | undefined;
+type ExtraType = Record<string, unknown>;
 
-export async function getExampleTableDescription(): Promise<DescribeTableCommandOutput> {
+const TABLE_NAME = 'tableName';
+
+async function getExampleItemTableDescription(): Promise<DescribeTableCommandOutput> {
   return await getTableDescription(TABLE_NAME);
 }
 
-export async function getExampleItemById(id: string, projectionExp?: string): Promise<object | undefined> {
+async function getExampleItemById(id: string, proj?: string): Promise<OptPartialExampleItem> {
   const params = {
     tableName: TABLE_NAME,
     key: { id },
-    projectionExpression: projectionExp,
+    projectionExpression: proj,
   };
 
-  return await getRecordByKey<object>(params);
+  return await getRecordByKey<PartialExampleItem>(params);
 }
 
-export async function getExampleByQuery(queryRequest: QueryRequest): Promise<QueryOutput<Partial<object>>> {
-  return await queryRecords<object>({ tableName: TABLE_NAME, queryRequest });
+async function getExampleItemsByQuery(query: Query, proj?: string): Promise<QueriedExampleItems> {
+  return await queryRecords<Partial<ExampleItem>>({
+    tableName: TABLE_NAME,
+    queryRequest: query,
+    projectionExpression: proj,
+  });
 }
 
-export async function createExampleItem(newItem: object): Promise<object> {
-  return await createRecord<object>({ tableName: TABLE_NAME, item: newItem });
+async function createExampleItem(newItem: ExampleItem): Promise<ExampleItem> {
+  return await createRecord<ExampleItem>({ tableName: TABLE_NAME, item: newItem });
 }
 
-export async function updateExampleItem(exampleItem: object): Promise<object | undefined> {
-  return await updateRecord<object>({ tableName: TABLE_NAME, key: { id: 0 }, item: exampleItem });
+async function updateExampleItem(item: ExampleItem, con?: string, ext?: ExtraType): Promise<ExampleItem> {
+  await updateRecord<ExampleItem>({
+    tableName: TABLE_NAME,
+    key: { id: item.id },
+    item: omit(item, ['id']),
+    conditionExpression: con,
+    extraExpressionAttributeValues: ext,
+    returnValues: 'NONE',
+  });
+  return await item;
 }
+
+export {
+  createExampleItem,
+  getExampleItemById,
+  getExampleItemsByQuery,
+  getExampleItemTableDescription,
+  updateExampleItem,
+};

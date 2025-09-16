@@ -1,5 +1,5 @@
+import type { QueryParams, RequestMetadata } from '@/@types';
 import type { APIGatewayProxyEvent } from 'aws-lambda';
-import type { QueryParams, RequestMetadata } from '@/types';
 
 import { logger } from '@/libs';
 
