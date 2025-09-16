@@ -7,11 +7,10 @@ import type {
   CustomUpdateItemInput,
 } from './types';
 
-import { DescribeTableCommand, DynamoDBClient } from '@aws-sdk/client-dynamodb';
-import { GetCommand, UpdateCommand, PutCommand, QueryCommand } from '@aws-sdk/lib-dynamodb';
-import { DynamoDBDocumentClient } from '@aws-sdk/lib-dynamodb';
 import { logger } from '@/libs';
 import { CustomError } from '@/libs/error';
+import { DescribeTableCommand, DynamoDBClient } from '@aws-sdk/client-dynamodb';
+import { DynamoDBDocumentClient, GetCommand, PutCommand, QueryCommand, UpdateCommand } from '@aws-sdk/lib-dynamodb';
 import * as build from './command';
 
 // Initialize DynamoDB client

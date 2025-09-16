@@ -6,6 +6,9 @@ import {
   putUpdateExampleItem,
 } from '@/functions/example';
 import type { AWS } from '@serverless/typescript';
+import * as dotenv from 'dotenv';
+
+dotenv.config();
 
 const serverlessConfig: AWS = {
   service: 'service-name',
@@ -17,7 +20,7 @@ const serverlessConfig: AWS = {
     stage: "${opt:stage, 'prod'}",
     runtime: 'nodejs22.x',
     region: 'ap-southeast-1',
-    profile: 'default',
+    profile: '',
     timeout: 29,
     memorySize: 512,
     architecture: 'arm64',
@@ -39,7 +42,7 @@ const serverlessConfig: AWS = {
       STAGE: '${self:provider.stage}',
       REGION: '${self:provider.region}',
     },
-    iam: { role: 'YOUR_ROLE_HERE' },
+    iam: { role: '' },
   },
   functions: {
     getExampleTableDesc,
