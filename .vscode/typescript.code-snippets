@@ -165,7 +165,7 @@
       "\tconst item = (await get${1:EntityName}ById(id)) as ${1:EntityName};",
       "\tif (!item) throw new CustomError(`Item with id: ${id} not found`, 404);",
       "",
-      "\treturn await updateExampleItemRepo({ ...update, ...item } as ExampleItem);",
+      "\treturn await update${1:EntityName}Repo({ ...update, ...item } as ${1:EntityName});",
       "}",
     ],
   },
