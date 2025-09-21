@@ -4,8 +4,8 @@ import type { APIGatewayProxyResultV2 } from 'aws-lambda';
 import middy from '@middy/core';
 import middyJsonBodyParser from '@middy/http-json-body-parser';
 import { handleApiFuncError } from '../error';
+import { formatApiResponse } from '../utility/response-format';
 import { authenticatedApiFunctionConfig, defaultApiFunctionConfig, generatePathname } from './function-configs';
-import { formatApiResponse } from './response-format';
 
 /**
  * @fileoverview Lambda function configuration generators for serverless applications.

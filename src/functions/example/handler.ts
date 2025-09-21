@@ -1,7 +1,7 @@
+import { QueryRequestSchema } from '@/dynamo';
 import { createApiGatewayFunction } from '@/libs';
-import { QueryRequestSchema } from '@/libs/dynamo';
+import { extractMetadata } from '@/libs/aws/auth';
 import { CustomError } from '@/libs/error';
-import { extractMetadata } from '@/libs/lambda/auth';
 import {
   createExampleItem,
   getExampleItemById as getExampleItemByIdService,

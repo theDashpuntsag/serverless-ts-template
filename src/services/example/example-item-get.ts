@@ -1,4 +1,4 @@
-import type { DescribeTableCommandOutput, QueryRequest as Query } from '@/libs/dynamo';
+import type { DescribeTableCommandOutput, QueryRequest as Query } from '@/dynamo';
 import type { OptPartialExampleItem, QueriedExampleItems } from '@/repository/example-repository';
 import {
   getExampleItemById as getExampleItemByIdRepo,

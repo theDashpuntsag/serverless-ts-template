@@ -3,8 +3,8 @@ import type {
   DescribeTableCommandOutput,
   QueryRequest as Query,
   CustomQueryCommandOutput as QueryOutput,
-} from '@/libs/dynamo';
-import { createRecord, getRecordByKey, getTableDescription, queryRecords, updateRecord } from '@/libs/dynamo';
+} from '@/dynamo';
+import { createRecord, getRecordByKey, getTableDescription, queryRecords, updateRecord } from '@/dynamo';
 import { omit } from '@/libs/utility';
 
 export type QueriedExampleItems = QueryOutput<PartialExampleItem>;
