@@ -1,13 +1,7 @@
-import {
-  getExampleItemById,
-  getExampleItemsByQuery,
-  getExampleTableDesc,
-  postCreateExampleItem,
-  putUpdateExampleItem,
-} from '@/functions/example';
 import type { AWS } from '@serverless/typescript';
-import * as dotenv from 'dotenv';
+import { APIS_EXAMPLE } from './src/functions/example';
 
+import * as dotenv from 'dotenv';
 dotenv.config();
 
 const serverlessConfig: AWS = {
@@ -45,11 +39,7 @@ const serverlessConfig: AWS = {
     iam: { role: '' },
   },
   functions: {
-    getExampleTableDesc,
-    getExampleItemById,
-    getExampleItemsByQuery,
-    postCreateExampleItem,
-    putUpdateExampleItem,
+    ...APIS_EXAMPLE,
   },
   package: { individually: true },
   custom: { prune: { automatic: true, number: 2 } },

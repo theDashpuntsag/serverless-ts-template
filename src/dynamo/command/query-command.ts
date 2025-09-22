@@ -138,6 +138,7 @@ export function buildQueryCommandInput(input: CustomQueryCommandInput): QueryCom
       skValue2,
       skValue2Type = 'S',
       skComparator,
+      sorting,
       limit,
       lastEvaluatedKey,
     },
@@ -172,6 +173,9 @@ export function buildQueryCommandInput(input: CustomQueryCommandInput): QueryCom
     ...(extraExpAttributeValues || {}),
   };
 
+  // ScanIdxForward defaults to true if not provided
+  const finalScanIdxForward = sorting !== undefined ? sorting === 'asc' : scanIdxForward !== false;
+
   // Build and return the QueryCommandInput
   return {
     TableName,
@@ -180,7 +184,7 @@ export function buildQueryCommandInput(input: CustomQueryCommandInput): QueryCom
     ExpressionAttributeNames: Object.keys(ExpressionAttributeNames).length ? ExpressionAttributeNames : undefined,
     ExpressionAttributeValues: Object.keys(ExpressionAttributeValues).length ? ExpressionAttributeValues : undefined,
     ProjectionExpression,
-    ScanIndexForward: scanIdxForward,
+    ScanIndexForward: finalScanIdxForward,
     FilterExpression: filterExpression,
     ExclusiveStartKey: lastEvaluatedKey ? JSON.parse(lastEvaluatedKey) : undefined,
     Limit: limit ? Number(limit) : undefined,
