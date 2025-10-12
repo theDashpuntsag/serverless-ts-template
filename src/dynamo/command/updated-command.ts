@@ -1,7 +1,55 @@
 import type { UpdateCommandInput } from '@aws-sdk/lib-dynamodb';
-import { extractExpAttributeNamesFromUpdate, replaceReservedKeywordsFromUpdateExp } from '../utils';
 import { CustomUpdateItemInput } from '../types';
+import { extractExpAttributeNamesFromUpdate, replaceReservedKeywordsFromUpdateExp } from '../utils';
 
+/**
+ * Build a DynamoDB {@link UpdateCommandInput} from a higher-level input shape.
+ *
+ * This helper supports two modes:
+ * 1) Explicit: if `updateExpression` is provided, it is passed through as-is along with any
+ *    provided expression attribute names/values.
+ * 2) Generated: if `updateExpression` is not provided, an expression like
+ *    `SET field1 = :field1, field2 = :field2, ...` is generated from `input.item` and
+ *    reserved keywords are safely replaced. Attribute maps are merged accordingly.
+ *
+ * Contract
+ * - Input: {@link CustomUpdateItemInput} describing table, key, and either an explicit update
+ *   expression or an `item` whose fields will be set.
+ * - Output: A fully-formed {@link UpdateCommandInput} safe to pass to the AWS SDK.
+ * - Error: This function does not throw; let the caller handle AWS command errors.
+ *
+ * Notes
+ * - The return shape from AWS depends on `ReturnValues`.
+ * - When generating the expression, all keys in `item` are included in a single `SET` clause.
+ * - Expression attribute names are composed from detected placeholders and any extras provided.
+ *
+ * @typeParam T - The partial entity type containing fields being updated.
+ * @param input - The high-level update input.
+ * @returns A DynamoDB {@link UpdateCommandInput}.
+ *
+ * @example Explicit expression
+ * ```ts
+ * const cmd = buildUpdateCommandInput<User>({
+ *   tableName: 'Users',
+ *   key: { pk: 'USER#1', sk: 'PROFILE' },
+ *   updateExpression: 'SET #email = :email',
+ *   expressionAttributeNames: { '#email': 'email' },
+ *   expressionAttributeValues: { ':email': 'new@example.com' },
+ *   returnValues: 'ALL_NEW',
+ * });
+ * ```
+ *
+ * @example Generated expression from item fields
+ * ```ts
+ * const cmd = buildUpdateCommandInput<User>({
+ *   tableName: 'Users',
+ *   key: { pk: 'USER#1', sk: 'PROFILE' },
+ *   item: { email: 'new@example.com', name: 'Alice' },
+ *   returnValues: 'ALL_NEW',
+ * });
+ * // Produces SET email = :email, name = :name with appropriate maps
+ * ```
+ */
 export function buildUpdateCommandInput<T>(input: CustomUpdateItemInput<T>): UpdateCommandInput {
   const {
     tableName: TableName,

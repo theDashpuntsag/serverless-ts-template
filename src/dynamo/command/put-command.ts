@@ -3,76 +3,32 @@ import type { CustomPutCommandInput } from '../types';
 import { extractExpAttributeNamesFromString, replaceReservedKeywordsFromProjection } from '../utils';
 
 /**
- * Constructs a valid `PutCommandInput` object for DynamoDB operations.
+ * Build a DynamoDB {@link PutCommandInput} from a higher-level input shape.
  *
- * @template T - The type of the item being inserted or updated.
- * @param {CustomPutCommandInput<T>} input - The input parameters required to build the `PutCommandInput`.
- * @returns {PutCommandInput} - The constructed `PutCommandInput` object for DynamoDB.
+ * Contract
+ * - Input: {@link CustomPutCommandInput} carrying table name, item, and optional expressions.
+ * - Output: A fully-formed `PutCommandInput` safe to pass to the AWS SDK.
+ * - Error: This function does not throw; let the caller handle AWS command errors.
  *
- * ### Parameters
- * - `tableName` (`string`): The name of the DynamoDB table (required).
- * - `item` (`T`): The item to insert or update in the table (required).
- * - `conditionExpression` (`string`): A conditional expression to ensure certain criteria are met before performing the operation (optional).
- * - `expressionAttributeNames` (`Record<string, string>`): Custom attribute names to avoid reserved keywords (optional).
- * - `expressionAttributeValues` (`Record<string, any>`): Custom attribute values used in conditional expressions (optional).
- * - `returnValues` (`'NONE' | 'ALL_OLD' | 'UPDATED_OLD' | 'ALL_NEW' | 'UPDATED_NEW'`): Specifies what values should be returned by the operation (default: `'NONE'`).
- * - `returnConsumedCapacity` (`'INDEXES' | 'TOTAL' | 'NONE'`): Determines the amount of throughput information to return (optional).
- * - `returnItemCollectionMetrics` (`'SIZE' | 'NONE'`): Indicates whether item collection metrics should be returned (optional).
+ * Notes
+ * - Put will overwrite an existing item with the same PK/SK unless a `conditionExpression`
+ *   prevents it. Provide one for create-only semantics.
+ * - When a condition is present, we auto-generate `ExpressionAttributeNames` from the item keys
+ *   to help with reserved keywords, and merge with any user-provided names.
  *
- * ### Steps
- * 1. Extracts relevant fields from the input object.
- * 2. Builds the initial `commandInput` object with the table name, item, and optional parameters.
- * 3. Dynamically generates `ExpressionAttributeNames` by:
- *    - Extracting all keys from the item.
- *    - Replacing reserved keywords using `replaceReservedKeywordsFromProjection`.
- *    - Generating placeholders using `extractExpAttributeNamesFromString`.
- * 4. Merges custom and generated `ExpressionAttributeNames`.
- * 5. Includes `ExpressionAttributeValues` if provided.
- * 6. Returns the final `PutCommandInput` object.
+ * @typeParam T - The item type to put.
+ * @param input - Parameters for building the Put command.
+ * @returns A configured `PutCommandInput`.
  *
- * ### Example Usage
- * ```typescript
- * const input = {
- *   tableName: "Products",
- *   item: {
- *     id: "123",
- *     name: "Test Product",
- *     size: "large", // Reserved keyword
- *   },
- *   conditionExpression: "attribute_not_exists(#id)",
- *   expressionAttributeNames: {
- *     "#id": "id",
- *   },
- *   expressionAttributeValues: {
- *     ":size": "large",
- *   },
- *   returnValues: "ALL_NEW",
- * };
- *
- * const commandInput = buildPutCommandInput(input);
- * console.log(commandInput);
- * ```
- *
- * ### Output
- * ```json
- * {
- *   "TableName": "Products",
- *   "Item": {
- *     "id": "123",
- *     "name": "Test Product",
- *     "size": "large"
- *   },
- *   "ConditionExpression": "attribute_not_exists(#id)",
- *   "ReturnValues": "ALL_NEW",
- *   "ExpressionAttributeNames": {
- *     "#id": "id",
- *     "#name": "name",
- *     "#size": "size"
- *   },
- *   "ExpressionAttributeValues": {
- *     ":size": "large"
- *   }
- * }
+ * @example Conditional create-only
+ * ```ts
+ * const cmd = buildPutCommandInput<User>({
+ *   tableName: 'Users',
+ *   item: { pk: 'USER#1', sk: 'PROFILE', email: 'x@y.z' },
+ *   conditionExpression: 'attribute_not_exists(#pk) AND attribute_not_exists(#sk)',
+ *   expressionAttributeNames: { '#pk': 'pk', '#sk': 'sk' },
+ *   returnValues: 'NONE',
+ * });
  * ```
  */
 export function buildPutCommandInput<T>(input: CustomPutCommandInput<T>): PutCommandInput {

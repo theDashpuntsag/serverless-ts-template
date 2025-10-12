@@ -3,7 +3,7 @@ import type { QueryRequest } from '../types';
 
 import { logger } from '@/libs';
 import { CustomError } from '@/libs/error';
-import { QueryRequestSchema } from '../types';
+import { queryRequestSchema } from '../types';
 
 type EventType = ValidatedAPIGatewayProxyEvent<object | null>;
 
@@ -35,7 +35,7 @@ export function extractQueryParamsFromEvent(event: EventType, query: QueryReques
   // Case 1: No query parameters provided
   // Return the default `query` after ensuring it conforms to the schema
   if (Object.keys(queryParams).length === 0) {
-    const parseResult = QueryRequestSchema.safeParse(query);
+    const parseResult = queryRequestSchema.safeParse(query);
     if (!parseResult.success) {
       const errorDetails = parseResult.error.issues.map((err) => `${err.path}: ${err.message}`).join(', ');
       logger.warn(`Invalid default query! ${errorDetails}`);
@@ -65,7 +65,7 @@ export function extractQueryParamsFromEvent(event: EventType, query: QueryReques
     };
 
     // Validate the merged parameters against the schema
-    const parseResult = QueryRequestSchema.safeParse(params);
+    const parseResult = queryRequestSchema.safeParse(params);
     if (!parseResult.success) {
       const errorDetails = parseResult.error.issues.map((err) => `${err.path}: ${err.message}`).join(', ');
       logger.warn(`Bad request! ${errorDetails}`);
@@ -93,7 +93,7 @@ export function extractQueryParamsFromEvent(event: EventType, query: QueryReques
   };
 
   // Validate the constructed parameters against the schema
-  const parseResult = QueryRequestSchema.safeParse(params);
+  const parseResult = queryRequestSchema.safeParse(params);
   if (!parseResult.success) {
     const errorDetails = parseResult.error.issues.map((err) => `${err.path}: ${err.message}`).join(', ');
     logger.warn(`Bad request! ${errorDetails}`);

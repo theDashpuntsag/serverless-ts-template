@@ -1,4 +1,4 @@
-import { QueryRequestSchema } from '@/dynamo';
+import { queryRequestSchema } from '@/dynamo';
 import { createApiGatewayFunction } from '@/libs';
 import { extractMetadata } from '@/libs/aws/auth';
 import { CustomError } from '@/libs/error';
@@ -37,7 +37,7 @@ export const getExampleItemById = createApiGatewayFunction<null>(async (event) =
 export const getExampleItemsByQuery = createApiGatewayFunction<object>(async (event) => {
   const { queryParams } = extractMetadata(event);
   if (!queryParams) throw new CustomError('Query params are missing!');
-  const parseResult = QueryRequestSchema.safeParse({ indexName: queryParams.index, ...queryParams });
+  const parseResult = queryRequestSchema.safeParse({ indexName: queryParams.index, ...queryParams });
 
   if (!parseResult.success) {
     const validationErrors = parseResult.error.issues.map((err) => err.path).join(', ');

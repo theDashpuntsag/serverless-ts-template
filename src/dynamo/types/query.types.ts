@@ -1,6 +1,10 @@
 import { z } from 'zod';
 
-export const QueryRequestSchema = z
+/**
+ * Zod schema for a structured description of a DynamoDB Query request.
+ * This drives generation of a key condition expression and related maps.
+ */
+export const queryRequestSchema = z
   .object({
     pKey: z.string(),
     pKeyType: z.string(),
@@ -48,4 +52,5 @@ export const QueryRequestSchema = z
     }
   });
 
-export type QueryRequest = z.infer<typeof QueryRequestSchema>;
+/** Runtime type inferred from {@link queryRequestSchema}. */
+export type QueryRequest = z.infer<typeof queryRequestSchema>;
