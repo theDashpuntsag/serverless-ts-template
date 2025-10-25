@@ -88,7 +88,15 @@ export function buildUpdateCommandInput<T>(input: CustomUpdateItemInput<T>): Upd
   const dynamicValues: Record<string, unknown> = {};
 
   for (const [field, value] of Object.entries(item)) {
-    const attributeKey = `:${field}`;
+    let attributeKey = `:${field}`;
+
+    // Check for conflicts with existing attribute values and generate unique key if needed
+    let counter = 0;
+    while (mergedValues[attributeKey] !== undefined) {
+      counter++;
+      attributeKey = `:${field}_update_${counter}`;
+    }
+
     updateExpParts.push(`${field} = ${attributeKey}`);
     dynamicValues[attributeKey] = value;
   }
