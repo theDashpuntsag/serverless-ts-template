@@ -12,16 +12,28 @@ import { extractExpAttributeNamesFromUpdate, replaceReservedKeywordsFromUpdateEx
  *    `SET field1 = :field1, field2 = :field2, ...` is generated from `input.item` and
  *    reserved keywords are safely replaced. Attribute maps are merged accordingly.
  *
- * Contract
- * - Input: {@link CustomUpdateItemInput} describing table, key, and either an explicit update
- *   expression or an `item` whose fields will be set.
- * - Output: A fully-formed {@link UpdateCommandInput} safe to pass to the AWS SDK.
- * - Error: This function does not throw; let the caller handle AWS command errors.
+ * ### Process flow
+ *  1. Extracts relevant fields from the input object.
+ *  2. If `updateExpression` is provided:
+ *    - Constructs the `UpdateCommandInput` directly using the provided expression and merges
+ *      any additional attribute names/values.
+ *  3. If `updateExpression` is not provided:
+ *    - Iterates over the keys in `item` to build a `SET` clause for the update expression.
+ *    - Generates unique placeholders for attribute values to avoid conflicts.
+ *    - Replaces reserved keywords in the generated expression.
+ *    - Merges dynamically generated attribute names and values with any provided ones.
+ *  4. Returns the fully constructed `UpdateCommandInput`.
  *
- * Notes
- * - The return shape from AWS depends on `ReturnValues`.
- * - When generating the expression, all keys in `item` are included in a single `SET` clause.
- * - Expression attribute names are composed from detected placeholders and any extras provided.
+ * ### Contract
+ *  - Input: {@link CustomUpdateItemInput} describing table, key, and either an explicit update
+ *    expression or an `item` whose fields will be set.
+ *  - Output: A fully-formed {@link UpdateCommandInput} safe to pass to the AWS SDK.
+ *  - Error: This function does not throw; let the caller handle AWS command errors.
+ *
+ * ### Notes
+ *  - The return shape from AWS depends on `ReturnValues`.
+ *  - When generating the expression, all keys in `item` are included in a single `SET` clause.
+ *  - Expression attribute names are composed from detected placeholders and any extras provided.
  *
  * @typeParam T - The partial entity type containing fields being updated.
  * @param input - The high-level update input.
@@ -81,6 +93,10 @@ export function buildUpdateCommandInput<T>(input: CustomUpdateItemInput<T>): Upd
       ReturnConsumedCapacity,
       ReturnItemCollectionMetrics,
     };
+  }
+
+  if (!item || Object.keys(item).length === 0) {
+    throw new Error('Either updateExpression or item with at least one field must be provided.');
   }
 
   // Dynamically generate UpdateExpression

@@ -171,7 +171,7 @@ export type CustomUpdateItemInput<T> = {
   /** Primary key of the item to update. */
   key: Record<string, unknown>;
   /** Partial entity with fields to set when generating expressions. */
-  item: Partial<T>;
+  item?: Partial<T>;
   /** Explicit update expression; if omitted, it may be generated. */
   updateExpression?: string;
   /** Optional condition expression. */

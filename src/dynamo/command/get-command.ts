@@ -11,7 +11,18 @@ import { extractExpAttributeNamesFromString, replaceReservedKeywordsFromProjecti
  * - Output: A fully-formed `GetCommandInput` safe to pass to the AWS SDK.
  * - Error: This function does not throw; let the caller handle AWS command errors.
  *
- * Notes
+ * ### Process flow
+ * 1. Extracts relevant fields from the input object.
+ * 2. If `projectionExpression` is provided, it replaces reserved keywords and prepares the expression.
+ * 3. Builds the initial `GetCommandInput` object with table name, key, and optional parameters.
+ * 4. Combines `ExpressionAttributeNames` from:
+ *   - Extracted names from `ProjectionExpression`.
+ *   - Any additional names provided in `extraExpressionAttributeNames`.
+ * 5. Adds `ExpressionAttributeNames` to the command if any are present.
+ * 6. Returns the final `GetCommandInput` object.
+ *
+ *
+ * ### Notes
  * - If `projectionExpression` is provided, reserved keywords are replaced and
  *   `ExpressionAttributeNames` are composed automatically from the projection.
  * - Any provided `expressionAttributeNames` are merged on top of the extracted ones.
