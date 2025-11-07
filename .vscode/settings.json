@@ -136,7 +136,7 @@
 
   // Terminal Settings
   "terminal.integrated.defaultProfile.osx": "zsh",
-  "terminal.integrated.fontSize": 14,
+  "terminal.integrated.fontSize": 12,
   "terminal.integrated.fontFamily": "MesloLGS NF",
 
   // Workbench Settings
