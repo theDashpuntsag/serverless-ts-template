@@ -31,6 +31,8 @@ export default defineConfig([
         },
       ],
       'no-undef': 'warn',
+      'no-redeclare': 'off',
+      '@typescript-eslint/no-redeclare': 'error',
     },
   },
   globalIgnores(['./dist/**/*', './.serverless/**/*', './node_modules/**/*']),
