@@ -7,8 +7,7 @@
   "private": true,
   "scripts": {
     "build": "tsc --build",
-    "deploy:dev": "sls deploy --stage dev",
-    "deploy:prod": "sls deploy --stage prod",
+    "deploy": "./scripts/deploy.sh",
     "dev": "serverless offline start --reloadHandler",
     "format": "prettier --write \"src/**/*.ts\"",
     "format:check": "prettier --check \"src/**/*.ts\"",
