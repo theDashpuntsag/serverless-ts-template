@@ -1,8 +1,6 @@
 import type { AWS } from '@serverless/typescript';
-import { APIS_EXAMPLE } from './src/functions/example';
-
-import * as dotenv from 'dotenv';
-dotenv.config();
+import 'dotenv/config';
+import { APIS_EXAMPLE } from './src/functions/api/example';
 
 const serverlessConfig: AWS = {
   service: 'service-name',
@@ -36,7 +34,7 @@ const serverlessConfig: AWS = {
       STAGE: '${self:provider.stage}',
       REGION: '${self:provider.region}',
     },
-    iam: { role: '' },
+    iam: { role: process.env.AWS_IAM_ROLE },
   },
   functions: {
     ...APIS_EXAMPLE,

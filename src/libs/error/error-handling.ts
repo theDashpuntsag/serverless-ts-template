@@ -1,16 +1,17 @@
 import type { APIGatewayProxyResultV2 } from 'aws-lambda';
 
-import { LbdFuncResponse } from '@/@types';
 import { formatApiResponse, formatResponse, logger } from '@/libs';
-import axios, { AxiosError } from 'axios';
+import { LbdFuncResponse } from '@/types';
 import { ZodError } from 'zod';
 import CustomError from './custom-error';
 
+/**
+ * Logs error messages based on the type of error.
+ * @param error - The error object to log.
+ * @param func - The function name where the error occurred.
+ * @returns
+ */
 export function logErrorMessage(error: unknown, func: string = 'Error'): void {
-  if (axios.isAxiosError(error)) {
-    logger.error(`Axios err ${func}: ${error.message}`);
-    return;
-  }
   if (error instanceof CustomError) {
     logger.error(`Custom error ${func}: ${error.message}`);
     return;
@@ -25,17 +26,27 @@ export function logErrorMessage(error: unknown, func: string = 'Error'): void {
   }
 }
 
+/**
+ * Handles errors for API Gateway functions and formats the response accordingly.
+ *
+ * @param error - The error object to handle.
+ * @returns
+ */
 export function handleApiFuncError(error: unknown): APIGatewayProxyResultV2 {
   if (error instanceof Error) logger.error(`Error occurred!: ${JSON.stringify(error.message)}`);
-  if (axios.isAxiosError(error)) return handleAxiosApiError(error);
   if (error instanceof CustomError) return formatApiResponse({ message: error.message }, error.statusCode);
   if (error instanceof ZodError) return handleZodError(error);
   return formatApiResponse({ message: 'Unexpected error occurred' }, 500);
 }
 
+/**
+ * Handles errors for Lambda functions and formats the response accordingly.
+ *
+ *s @param error
+ * @returns
+ */
 export function handleDefaultError(error: unknown): LbdFuncResponse {
   if (error instanceof Error) logger.error(`Error occurred!: ${JSON.stringify(error.message)}`);
-  if (axios.isAxiosError(error)) return handleAxiosFuncError(error);
   if (error instanceof CustomError) return formatResponse({ message: error.message }, error.statusCode);
   if (error instanceof ZodError) return handleZodFuncError(error);
   return formatResponse({ message: 'Unexpected error occurred' }, 500);
@@ -52,17 +63,3 @@ function handleZodFuncError(error: ZodError): LbdFuncResponse {
   const formattedMessage = `Missing or invalid fields: ${missingFields.join(', ')}`;
   return formatResponse({ message: formattedMessage }, 400);
 }
-
-function handleAxiosApiError(error: AxiosError): APIGatewayProxyResultV2 {
-  logger.error('Axios error in API function:', error);
-  const status = error.response?.status || 500;
-  const message = error.response?.data || { message: 'Unknown API error' };
-  return formatApiResponse({ message }, status);
-}
-
-const handleAxiosFuncError = (error: AxiosError): LbdFuncResponse => {
-  logger.error('Axios error in function:', error);
-  const status = error.response?.status || 500;
-  const message = error.response?.data || 'Unknown function error';
-  return formatResponse({ message }, status);
-};

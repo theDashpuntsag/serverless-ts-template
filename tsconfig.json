@@ -9,7 +9,7 @@
     "strict": true,
     "forceConsistentCasingInFileNames": true,
     "lib": ["ESNext"],
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "noUnusedParameters": true,
     "removeComments": true,
     "sourceMap": true,
@@ -22,8 +22,6 @@
     "skipLibCheck": true
   },
   "include": ["src/**/*.ts", "serverless.ts", "vitest.config.ts"],
-  "exclude": ["node_modules/**/*", ".serverless/**/*", ".webpack/**/*", "_warmup/**/*", ".vscode/**/*"],
-  "ts-node": {
-    "require": ["tsconfig-paths/register"]
-  }
+  "exclude": ["node_modules/**/*", ".serverless/**/*", "_warmup/**/*", ".vscode/**/*"],
+  "ts-node": { "require": ["tsconfig-paths/register"] }
 }

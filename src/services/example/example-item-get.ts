@@ -1,13 +1,22 @@
-import type { DescribeTableCommandOutput, QueryRequest as Query } from '@/dynamo';
+import type { DynamoQueryRequest as Query } from '@/dynamo';
+import { logger } from '@/libs';
 import type { OptPartialExampleItem, QueriedExampleItems } from '@/repository/example-repository';
 import {
   getExampleItemById as getExampleItemByIdRepo,
   getExampleItemsByQuery as getExampleItemsByQueryRepo,
   getExampleItemTableDescription,
 } from '@/repository/example-repository';
+import { TableDescription } from '@aws-sdk/client-dynamodb';
 
-export async function getExampleItemTableDesc(): Promise<DescribeTableCommandOutput> {
-  return await getExampleItemTableDescription();
+export async function getExampleItemTableDesc(): Promise<TableDescription> {
+  const { Table } = await getExampleItemTableDescription();
+
+  if (!Table) {
+    logger.warn('Table description is undefined');
+    throw new Error('Table description is undefined');
+  }
+
+  return Table;
 }
 
 export async function getExampleItemById(id: string, proj?: string): Promise<OptPartialExampleItem> {

@@ -1,5 +1,19 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { getExampleTableDescription, getExampleItemById } from '../../src/services/example';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { getExampleItemById, getExampleItemTableDesc } from '../../src/services/example';
+
+// Mock the logger before any imports
+vi.mock('../../src/libs', async () => {
+  const actual = await vi.importActual('../../src/libs');
+  return {
+    ...actual,
+    logger: {
+      error: vi.fn(),
+      info: vi.fn(),
+      warn: vi.fn(),
+      debug: vi.fn(),
+    },
+  };
+});
 
 // Mock the repository
 vi.mock('../../src/repository', () => ({
@@ -17,7 +31,7 @@ describe('Example Service', () => {
   describe('getExampleTableDescription', () => {
     it('should return table description', async () => {
       // This is a basic test structure - you'll need to implement based on your actual service logic
-      const result = await getExampleTableDescription();
+      const result = await getExampleItemTableDesc();
       expect(result).toBeDefined();
     });
   });

@@ -1,6 +1,6 @@
 {
   "name": "serverless-ts-template",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "A serverless framework template for typescript",
   "main": "serverless.ts",
   "type": "module",
@@ -57,6 +57,7 @@
     "eslint": "^9.39.1",
     "globals": "^15.15.0",
     "husky": "^9.1.7",
+    "jiti": "^2.6.1",
     "prettier": "^3.7.2",
     "serverless": "^4.25.0",
     "serverless-offline": "^14.4.0",
