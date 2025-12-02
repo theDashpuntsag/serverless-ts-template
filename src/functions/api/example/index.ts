@@ -3,7 +3,7 @@ import { createDefaultApiFunction } from '@/libs';
 export const APIS_EXAMPLE = {
   getExampleTableDesc: createDefaultApiFunction({
     dir: __dirname,
-    fn: 'getExampleTableDesc',
+    fnName: 'getExampleTableDesc',
     http: {
       method: 'GET',
       url: '/v1/example/table-desc',
@@ -11,7 +11,7 @@ export const APIS_EXAMPLE = {
   }),
   getExampleItemById: createDefaultApiFunction({
     dir: __dirname,
-    fn: 'getExampleItemById',
+    fnName: 'getExampleItemById',
     http: {
       method: 'GET',
       url: '/v1/example/item/{id}',
@@ -19,7 +19,7 @@ export const APIS_EXAMPLE = {
   }),
   getExampleItemsByQuery: createDefaultApiFunction({
     dir: __dirname,
-    fn: 'getExampleItemsByQuery',
+    fnName: 'getExampleItemsByQuery',
     http: {
       method: 'GET',
       url: '/v1/example/items',
@@ -27,7 +27,7 @@ export const APIS_EXAMPLE = {
   }),
   postCreateExampleItem: createDefaultApiFunction({
     dir: __dirname,
-    fn: 'postCreateExampleItem',
+    fnName: 'postCreateExampleItem',
     http: {
       method: 'POST',
       url: '/api/v1/example/item',
@@ -35,7 +35,7 @@ export const APIS_EXAMPLE = {
   }),
   putUpdateExampleItem: createDefaultApiFunction({
     dir: __dirname,
-    fn: 'putUpdateExampleItem',
+    fnName: 'putUpdateExampleItem',
     http: {
       method: 'PUT',
       url: '/api/v1/example/item',
