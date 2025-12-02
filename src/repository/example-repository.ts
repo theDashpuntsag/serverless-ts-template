@@ -2,7 +2,7 @@ import { omit } from '@/libs/utility';
 import type { ExampleItem } from '@/types';
 import { exampleItemSch } from '@/types';
 import { DescribeTableCommandOutput } from '@aws-sdk/client-dynamodb';
-import { DynamoQueryRequest } from '../dynamo';
+import { DynamoQueryRequest } from 'dynamo-command-builder';
 import {
   createRecordOnDynamo,
   getRecordFromDynamo,
@@ -18,7 +18,7 @@ export type OptPartialExampleItem = Partial<ExampleItem> | undefined;
 export type OptionalExampleItem = ExampleItem | undefined;
 type ExtraType = Record<string, unknown>;
 
-const TABLE_NAME = 'example-item-table';
+const TABLE_NAME = 'motforex-withdrawal-requests';
 
 /**
  * Retrieves the description of the ExampleItem table from DynamoDB.
@@ -54,15 +54,15 @@ async function getExampleItemById(id: string, proj?: string): Promise<OptPartial
  * @returns The queried ExampleItems along with the last evaluated key for pagination.
  */
 async function getExampleItemsByQuery(query: DynamoQueryRequest, proj?: string): Promise<QueriedExampleItems> {
-  const { Items, LastEvaluatedKey } = await queryRecordFromDynamo({
+  const result = await queryRecordFromDynamo({
     tableName: TABLE_NAME,
     queryRequest: query,
     projectionExpression: proj,
   });
 
   return {
-    items: Items ? (Items as ExampleItem[] | Partial<ExampleItem>[]) : [],
-    lastEvaluatedKey: LastEvaluatedKey ?? {},
+    lastEvaluatedKey: result.LastEvaluatedKey ?? {},
+    items: result.Items ? (result.Items as ExampleItem[] | Partial<ExampleItem>[]) : [],
   };
 }
 

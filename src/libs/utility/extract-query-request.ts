@@ -1,6 +1,6 @@
 import { CustomError, logger } from '@/libs';
 import { ValidatedAPIGatewayProxyEvent } from '@/types';
-import { DynamoQueryRequest, dynamoQueryRequestSch } from '../../types';
+import { DynamoQueryRequest, dynamoQueryRequestSch } from 'dynamo-command-builder';
 
 type EventType = ValidatedAPIGatewayProxyEvent<object | null>;
 

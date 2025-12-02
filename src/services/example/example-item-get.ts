@@ -1,4 +1,3 @@
-import type { DynamoQueryRequest as Query } from '@/dynamo';
 import { logger } from '@/libs';
 import type { OptPartialExampleItem, QueriedExampleItems } from '@/repository/example-repository';
 import {
@@ -7,6 +6,7 @@ import {
   getExampleItemTableDescription,
 } from '@/repository/example-repository';
 import { TableDescription } from '@aws-sdk/client-dynamodb';
+import type { DynamoQueryRequest as Query } from 'dynamo-command-builder';
 
 export async function getExampleItemTableDesc(): Promise<TableDescription> {
   const { Table } = await getExampleItemTableDescription();

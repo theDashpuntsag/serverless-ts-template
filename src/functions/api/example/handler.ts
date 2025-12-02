@@ -1,6 +1,5 @@
-import { extractQueryParamsFromEvent } from '@/dynamo';
-import { CustomError } from '@/libs/error';
-import { createHttpHandler } from '@/libs/functions';
+import { createHttpHandler, CustomError, extractMetadataFromEvent } from '@/libs';
+import { extractQueryParamsFromEvent } from '@/libs/utility/extract-query-request';
 import {
   createExampleItem,
   getExampleItemById as getExampleItemByIdService,
@@ -8,7 +7,6 @@ import {
   getExampleItemTableDesc as getExampleTableDescription,
   updateExampleItem,
 } from '@/services/example';
-import { extractMetadataFromEvent } from '../../../libs/api';
 
 /**
  *  Get example table description
@@ -37,7 +35,7 @@ export const getExampleItemsByQuery = createHttpHandler<object>(async (event) =>
 
   const queryRequest = extractQueryParamsFromEvent(event, {
     indexName: 'status-createdAt-index',
-    pKey: `PENDING`,
+    pKey: `EXECUTED`,
     pKeyType: 'S',
     pKeyProp: 'status',
     ...queryParams,

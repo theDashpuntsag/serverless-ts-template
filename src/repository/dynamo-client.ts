@@ -18,7 +18,7 @@ import {
   CustomPutCommandInput,
   CustomQueryCommandInput,
   CustomUpdateCommandInput,
-} from '../dynamo';
+} from 'dynamo-command-builder';
 import { logger } from '../libs';
 
 const dynamoDb = new DynamoDBClient({ region: process.env.AWS_REGION || 'ap-southeast-1' });
