@@ -73,12 +73,12 @@ async function getExampleItemsByQuery(query: DynamoQueryRequest, proj?: string):
  * @returns The created ExampleItem with all attributes as stored in DynamoDB.
  */
 async function createExampleItem(newItem: ExampleItem): Promise<ExampleItem> {
-  const { Attributes } = await createRecordOnDynamo({
+  await createRecordOnDynamo({
     tableName: TABLE_NAME,
     item: newItem,
-    returnValues: 'ALL_NEW',
+    conditionExpression: 'attribute_not_exists(id)',
   });
-  return exampleItemSch.parse(Attributes);
+  return exampleItemSch.parse(newItem);
 }
 
 /**

@@ -8,7 +8,7 @@ import { HttpEventMetadata } from './api-event.types';
  * @param {APIGatewayProxyEvent} event - The API Gateway Proxy Event object.
  * @returns {HttpEventMetadata} - Extracted metadata including IP address, token, headers, query parameters, and body.
  */
-export function extractMetadataFromEvent(event: ValidatedAPIGatewayProxyEvent<object>): HttpEventMetadata {
+export function extractMetadataFromEvent(event: ValidatedAPIGatewayProxyEvent<unknown>): HttpEventMetadata {
   try {
     const ipAddress = event.requestContext.identity.sourceIp;
     const token = event.headers.Authorization?.replace('Bearer ', '');
