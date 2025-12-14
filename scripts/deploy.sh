@@ -29,6 +29,15 @@ if ! command -v pnpm &> /dev/null; then
 fi
 log "${GREEN}System requirements met.${NC}"
 
+# 1.1 Check if git working directory is clean
+log "${YELLOW}Checking git status...${NC}"
+if [ -n "$(git status --porcelain)" ]; then
+    log "${RED}Error: Git working directory is not clean.${NC}"
+    log "${RED}Please commit or stash your changes before deploying.${NC}"
+    exit 1
+fi
+log "${GREEN}Git working directory is clean.${NC}"
+
 
 # 2. Build the project before deployment
 log "${YELLOW}Building project before deployment...${NC}"
@@ -89,22 +98,22 @@ if [[ ! "$response" =~ ^[Yy]$ ]]; then
 fi
 log "${GREEN}Table names verified.${NC}"
 
-# 7. Check if the .env file exists and handle ENVIRONMENT
-log "${YELLOW}Checking for .env file and ENVIRONMENT configuration...${NC}"
-if [ ! -f .env ]; then
-    log "${RED}Error: .env file not found.${NC}"
-    exit 1
-fi
-log "${GREEN}.env file found.${NC}"
+# 7. Check if the .env file exists and handle STAGE
+log "${YELLOW}Checking for .env file and STAGE configuration...${NC}"
+if [ -f .env ]; then
+    log "${GREEN}.env file found.${NC}"
 
-# 8. Verify deployment
-log "${YELLOW}Deployment Verification${NC}"
-CURRENT_ENVIRONMENT=$(grep "^ENVIRONMENT=" .env | cut -d '=' -f2)
-log "Deploying to environment: ${GREEN}$CURRENT_ENVIRONMENT${NC}"
-read -p "Do you want to proceed? (y/N) " response
-if [[ ! "$response" =~ ^[Yy]$ ]]; then
-    log "${RED}Deployment aborted.${NC}"
-    exit 1
+    # 8. Verify deployment
+    log "${YELLOW}Deployment Verification${NC}"
+    CURRENT_STAGE=$(grep "^STAGE=" .env | cut -d '=' -f2)
+    log "Deploying to stage: ${GREEN}$CURRENT_STAGE${NC}"
+    read -p "Do you want to proceed? (y/N) " response
+    if [[ ! "$response" =~ ^[Yy]$ ]]; then
+        log "${RED}Deployment aborted.${NC}"
+        exit 1
+    fi
+else
+    log "${YELLOW}No .env file found, skipping .env verification.${NC}"
 fi
 
 
