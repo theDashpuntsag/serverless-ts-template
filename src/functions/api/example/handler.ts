@@ -1,5 +1,4 @@
 import { createHttpHandler, CustomError, extractMetadataFromEvent } from '@/libs';
-import { extractQueryParamsFromEvent } from '@/libs/utility/extract-query-request';
 import {
   createExampleItem,
   getExampleItemById as getExampleItemByIdService,
@@ -7,6 +6,7 @@ import {
   getExampleItemTableDesc as getExampleTableDescription,
   updateExampleItem,
 } from '@/services/example';
+import { extractQueryReqFromParams } from 'dynamo-command-builder';
 
 /**
  *  Get example table description
@@ -33,7 +33,7 @@ export const getExampleItemsByQuery = createHttpHandler<object>(async (event) =>
   const { queryParams } = extractMetadataFromEvent(event);
   if (!queryParams) throw new CustomError('Query params are missing!');
 
-  const queryRequest = extractQueryParamsFromEvent(event, {
+  const queryRequest = extractQueryReqFromParams(event.queryStringParameters, {
     indexName: 'status-createdAt-index',
     pKey: `EXECUTED`,
     pKeyType: 'S',
