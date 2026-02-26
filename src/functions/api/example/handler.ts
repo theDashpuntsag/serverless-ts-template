@@ -38,6 +38,7 @@ export const getExampleItemsByQuery = createHttpHandler<object>(async (event) =>
     pKey: `EXECUTED`,
     pKeyType: 'S',
     pKeyProp: 'status',
+    limit: 20,
     ...queryParams,
   });
 

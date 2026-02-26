@@ -5,12 +5,12 @@ import { APIS_EXAMPLE } from './src/functions/api/example';
 const serverlessConfig: AWS = {
   service: 'service-name',
   frameworkVersion: '4',
-  app: 'app-name',
+  app: 'service-name',
   plugins: ['serverless-offline', 'serverless-prune-plugin'],
   provider: {
     name: 'aws',
-    stage: "${opt:stage, 'prod'}",
-    runtime: 'nodejs22.x',
+    stage: "${opt:stage, 'dev'}",
+    runtime: 'nodejs24.x',
     region: 'ap-southeast-1',
     profile: '',
     timeout: 29,
@@ -30,10 +30,7 @@ const serverlessConfig: AWS = {
       },
     },
     logRetentionInDays: 365,
-    environment: {
-      STAGE: '${self:provider.stage}',
-      REGION: '${self:provider.region}',
-    },
+    environment: {},
     iam: { role: process.env.AWS_IAM_ROLE },
   },
   functions: {

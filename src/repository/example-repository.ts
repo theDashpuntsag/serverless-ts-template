@@ -18,7 +18,7 @@ export type OptPartialExampleItem = Partial<ExampleItem> | undefined;
 export type OptionalExampleItem = ExampleItem | undefined;
 type ExtraType = Record<string, unknown>;
 
-const TABLE_NAME = 'motforex-withdrawal-requests';
+const TABLE_NAME = 'example-table';
 
 /**
  * Retrieves the description of the ExampleItem table from DynamoDB.
