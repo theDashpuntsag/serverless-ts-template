@@ -1,4 +1,3 @@
-export * from './api';
 export * from './axios';
 export * from './error';
 export * from './functions';

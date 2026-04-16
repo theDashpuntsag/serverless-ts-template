@@ -1,44 +1,44 @@
-import { createDefaultApiFunction } from '@/libs';
+import { createDefaultApiFunc } from '@/libs';
 
 export const APIS_EXAMPLE = {
-  getExampleTableDesc: createDefaultApiFunction({
-    dir: __dirname,
-    fnName: 'getExampleTableDesc',
+  getExampleTableDesc: createDefaultApiFunc({
+    directory: __dirname,
+    handlerFn: 'getExampleTableDesc',
     http: {
       method: 'GET',
-      url: '/v1/example/table-desc',
+      path: '/v1/example/table-desc',
     },
   }),
-  getExampleItemById: createDefaultApiFunction({
-    dir: __dirname,
-    fnName: 'getExampleItemById',
+  getExampleItemById: createDefaultApiFunc({
+    directory: __dirname,
+    handlerFn: 'getExampleItemById',
     http: {
       method: 'GET',
-      url: '/v1/example/item/{id}',
+      path: '/v1/example/item/{id}',
     },
   }),
-  getExampleItemsByQuery: createDefaultApiFunction({
-    dir: __dirname,
-    fnName: 'getExampleItemsByQuery',
+  getExampleItemsByQuery: createDefaultApiFunc({
+    directory: __dirname,
+    handlerFn: 'getExampleItemsByQuery',
     http: {
       method: 'GET',
-      url: '/v1/example/items',
+      path: '/v1/example/items',
     },
   }),
-  postCreateExampleItem: createDefaultApiFunction({
-    dir: __dirname,
-    fnName: 'postCreateExampleItem',
+  postCreateExampleItem: createDefaultApiFunc({
+    directory: __dirname,
+    handlerFn: 'postCreateExampleItem',
     http: {
       method: 'POST',
-      url: '/api/v1/example/item',
+      path: '/v1/example/item',
     },
   }),
-  putUpdateExampleItem: createDefaultApiFunction({
-    dir: __dirname,
-    fnName: 'putUpdateExampleItem',
+  putUpdateExampleItem: createDefaultApiFunc({
+    directory: __dirname,
+    handlerFn: 'putUpdateExampleItem',
     http: {
       method: 'PUT',
-      url: '/api/v1/example/item',
+      path: '/v1/example/item',
     },
   }),
 };

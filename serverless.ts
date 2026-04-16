@@ -1,24 +1,23 @@
 import type { AWS } from '@serverless/typescript';
 import 'dotenv/config';
+import serverlessEnv from './env';
 import { APIS_EXAMPLE } from './src/functions/api/example';
 
 const serverlessConfig: AWS = {
   service: 'service-name',
   frameworkVersion: '4',
-  app: 'service-name',
+  app: 'app-name',
   plugins: ['serverless-offline', 'serverless-prune-plugin'],
   provider: {
     name: 'aws',
     stage: "${opt:stage, 'dev'}",
     runtime: 'nodejs24.x',
-    region: 'ap-southeast-1',
-    profile: '',
+    region: (serverlessEnv.AWS_REGION as AWS['provider']['region']) ?? 'ap-southeast-1',
+    profile: serverlessEnv.AWS_PROFILE,
     timeout: 29,
     memorySize: 512,
     architecture: 'arm64',
-    deploymentBucket: {
-      blockPublicAccess: true,
-    },
+    deploymentBucket: { blockPublicAccess: true },
     apiGateway: {
       minimumCompressionSize: 1024, // Compress responses larger than 1KB
       shouldStartNameWithService: true, // Include the service name in API Gateway endpoint URLs
@@ -30,8 +29,10 @@ const serverlessConfig: AWS = {
       },
     },
     logRetentionInDays: 365,
-    environment: {},
-    iam: { role: process.env.AWS_IAM_ROLE },
+    environment: {
+      EXAMPLE_TABLE_NAME: '${self:service}-${sls:stage}-example-table',
+    },
+    iam: { role: serverlessEnv.AWS_IAM_ROLE },
   },
   functions: {
     ...APIS_EXAMPLE,

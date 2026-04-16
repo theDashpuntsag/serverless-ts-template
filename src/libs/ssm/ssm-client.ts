@@ -1,7 +1,7 @@
 import type { ParameterType } from '@aws-sdk/client-ssm';
 
-import { GetParameterCommand, PutParameterCommand, SSMClient } from '@aws-sdk/client-ssm';
 import { logger } from '@/libs';
+import { GetParameterCommand, PutParameterCommand, SSMClient } from '@aws-sdk/client-ssm';
 
 const client = new SSMClient({ region: process.env.AWS_REGION || 'ap-southeast-1' });
 

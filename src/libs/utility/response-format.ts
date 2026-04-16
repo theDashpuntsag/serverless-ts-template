@@ -1,5 +1,5 @@
-import type { LbdFuncResponse as FuncRes } from '@/types/util.types';
 import type { APIGatewayProxyResultV2 as ApiFuncRes } from 'aws-lambda';
+import { LbdFuncResponse } from '../../types';
 
 /**
  * Formats a standard Lambda function response.
@@ -9,7 +9,7 @@ import type { APIGatewayProxyResultV2 as ApiFuncRes } from 'aws-lambda';
  * @param other - Additional properties to include in the response
  * @returns - The formatted Lambda function response
  */
-export function formatResponse(response: object, statusCode: number = 200, other: object = {}): FuncRes {
+export function formatResponse(response: object, statusCode: number = 200, other: object = {}): LbdFuncResponse {
   return {
     statusCode,
     body: JSON.stringify(response),

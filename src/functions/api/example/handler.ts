@@ -6,6 +6,7 @@ import {
   getExampleItemTableDesc as getExampleTableDescription,
   updateExampleItem,
 } from '@/services/example';
+import { exampleItemSch } from '@/types';
 import { extractQueryReqFromParams } from 'dynamo-command-builder';
 
 /**
@@ -51,7 +52,8 @@ export const getExampleItemsByQuery = createHttpHandler<object>(async (event) =>
 export const postCreateExampleItem = createHttpHandler<object>(async (event) => {
   const { body } = extractMetadataFromEvent(event);
   if (!body) throw new CustomError('Request body is missing');
-  return await createExampleItem(body);
+  const parsedBody = exampleItemSch.parse(body);
+  return await createExampleItem(parsedBody);
 });
 
 /**
@@ -61,5 +63,6 @@ export const putUpdateExampleItem = createHttpHandler<object>(async (event) => {
   if (!event.pathParameters || !event.pathParameters.id) throw new CustomError(`Path variable is missing`);
   const { body } = extractMetadataFromEvent(event);
   if (!body) throw new CustomError('Request body is missing');
-  return await updateExampleItem(body);
+  const parsedBody = exampleItemSch.parse(body);
+  return await updateExampleItem(parsedBody);
 });
