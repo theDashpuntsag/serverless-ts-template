@@ -1,0 +1,18 @@
+{
+  "Zod Import": {
+    "prefix": "importzod",
+    "body": ["import { z } from 'zod';"],
+    "description": "Import Zod library",
+  },
+  "Create Zod Object Schema": {
+    "prefix": "zodobj",
+    "body": [
+      "export const ${1:schemaName}Sch = z.object({",
+      "  ${2:field}: z.${3:string}(),",
+      "});",
+      "",
+      "export type ${4:TypeName} = z.infer<typeof ${1:schemaName}Sch>;",
+    ],
+    "description": "Create a Zod object schema with inferred type",
+  },
+}

@@ -1,6 +1,5 @@
 import { LbdFuncResponse, GenericFuncResponse as Response } from '@/types';
 import { InvocationType as IType, InvokeCommand, LambdaClient } from '@aws-sdk/client-lambda';
-import { logger } from '../utility';
 
 const lambdaClient = new LambdaClient({ region: 'ap-southeast-1' });
 
@@ -129,7 +128,7 @@ export async function invokeLambdaFn<T>(fnName: string, payload: unknown, iType?
     // Fallback: plain JSON object
     return { statusCode: transportStatus, body: parsed as T };
   } catch (error: unknown) {
-    logger.error(`Error occurred on invokeLambdaFunc ${fnName}  ${JSON.stringify(error)}`);
+    console.error(`Error invoking Lambda ${fnName}:`, error);
     throw error;
   }
 }

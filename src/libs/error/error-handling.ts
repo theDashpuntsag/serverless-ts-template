@@ -12,8 +12,6 @@ import CustomError from './custom-error';
  * @returns
  */
 export function logErrorMessage(error: unknown, func: string = 'Error'): void {
-  logger.error(`Error occurred with type: ${typeof error}`);
-
   if (error instanceof CustomError) {
     logger.error(`Custom error ${func}: ${error.message}`);
     return;
